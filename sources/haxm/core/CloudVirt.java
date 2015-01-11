@@ -1,3 +1,9 @@
+package haxm.core;
+
+import haxm.VirtState;
+
+import java.util.List;
+
 public class CloudVirt{
 	
 	/**A CUTE LITTLE VERSION NUMBER AS A STRING :) ^_^*/
@@ -12,8 +18,8 @@ public class CloudVirt{
 	/**A list of simulation entities*/	
 	private static List<Entity> entityList;
 	
-	/**A State object to maintain the state of simulation*/
-	private static State simulationState;
+	/**A State object to maintain the state of simulation*/	
+	private static VirtState simulationState;
 	
 	/**A time variable to represent clock time of the simulation*/
 	private  static double time;

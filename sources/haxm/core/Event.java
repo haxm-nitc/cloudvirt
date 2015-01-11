@@ -1,3 +1,4 @@
+package haxm.core;
 public class Event{
 	public static final int INVALID = -1;
 	public static final int CREATE = 1;

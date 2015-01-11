@@ -1,4 +1,6 @@
-public enum StateEnum{
+package haxm;
+
+public enum VirtStateEnum{
 		RUNNING,
 		STOPPED,
 		PAUSED,

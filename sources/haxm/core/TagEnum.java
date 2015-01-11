@@ -1,3 +1,4 @@
+package haxm.core;
 public enum TagEnum{
 	REGISTER_RESOURCE,
 	RESOURCE_CHARACTERISTICS_REQUEST,

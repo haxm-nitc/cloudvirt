@@ -1,3 +1,7 @@
+package haxm.core;
+
+import haxm.VirtState;
+
 public class Entity{
 	/**A unique Entity Identifier*/
 	private int id;
@@ -5,7 +9,7 @@ public class Entity{
 	private String name;
 	
 	/**Current State of the entity*/
-	private State currentState;
+	private VirtState currentState;
 
 	/**Event queue of the entity. Events to be processed are kept in the buffered queue*/
 	private BufferQueue bufferQueue;
