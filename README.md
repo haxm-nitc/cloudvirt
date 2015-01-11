@@ -1,3 +1,3 @@
 # cloudvirt
 
-A Cloud Simulator
+A Cloud Simulator in Java.
