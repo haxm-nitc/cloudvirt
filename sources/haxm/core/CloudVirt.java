@@ -1,6 +1,7 @@
 package haxm.core;
 
 import haxm.VirtState;
+import haxm.components.CloudRegistry;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class CloudVirt{
 	private static EventQueue eventQueue;
 	
 	/**A list of simulation entities*/	
-	private static List<Entity> entityList;
+	private static List<VirtEntity> entityList;
 	
 	/**A State object to maintain the state of simulation*/	
 	private static VirtState simulationState;
@@ -28,19 +29,24 @@ public class CloudVirt{
 	
 	
 	/** Method to start the simulation*/
-	public static void startSimulation(){
+	public static boolean startSimulation(){
+		System.out.println("------------------SIMULATION STARTED------------------");
+		return true;
 	}
 
 	/** Method to stop the simulation*/
-	public static void stopSimulation(){
+	public static boolean stopSimulation(){
+		return true;
 	}
 
 	/** Method to pause the simulation*/
-	public static void pauseSimulation(){
+	public static boolean pauseSimulation(){
+		return true;
 	}
 
 	/** Method to abruptly terminate the simulation*/
-	public static void abruptlyTerminateSimulation(){
+	public static boolean abruptlyTerminateSimulation(){
+		return true;
 	}
 }
 

@@ -1,5 +1,5 @@
 package haxm.core;
-public class Event{
+public class VirtEvent{
 	public static final int INVALID = -1;
 	public static final int CREATE = 1;
 	public static final int SEND = 2;
