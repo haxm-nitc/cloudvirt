@@ -1,8 +1,12 @@
 package haxm.core;
 
 import haxm.VirtState;
+import haxm.VirtStateEnum;
 
 public abstract class VirtEntity{
+	
+	private static int numEntities = 0;
+	
 	/**A unique Entity Identifier*/
 	private int id;
 	/**/
@@ -12,11 +16,17 @@ public abstract class VirtEntity{
 	private VirtState currentState;
 
 	/**Event queue of the entity. Events to be processed are kept in the buffered queue*/
-	private BufferQueue bufferQueue;
+	private EventQueue localQueue;
+	
+	public VirtEntity(String name){
+		this.name = name;
+		this.id = ++numEntities;
+		this.currentState.setState(VirtStateEnum.INVALID);
+	}
 	
 	
 	protected abstract boolean startEntity();
-	protected abstract boolean stopEntity();
+	protected abstract boolean shutdownEntity();
 	protected abstract boolean processEvent(VirtEvent event);
 	
 

@@ -1,5 +1,6 @@
 package haxm.core;
 
+import haxm.LogFile;
 import haxm.VirtState;
 import haxm.components.CloudRegistry;
 
@@ -14,7 +15,7 @@ public class CloudVirt{
 	private static CloudRegistry cloudRegistry;
 	
 	/**An event queue to hold the events*/
-	private static EventQueue eventQueue;
+	private static EventQueue globalQueue;
 	
 	/**A list of simulation entities*/	
 	private static List<VirtEntity> entityList;
@@ -25,12 +26,22 @@ public class CloudVirt{
 	/**A time variable to represent clock time of the simulation*/
 	private  static double time;
 	
+	private static LogFile mainLog = new LogFile("log.txt");
+	private static LogFile eventsLog = new LogFile("events.txt");
+	private static LogFile entityLog = new LogFile("entity.txt");
 	
-	
+	public static void writeLog(LogFile logFile, String message){
+		if(logFile != null){
+			logFile.append(message);
+		}
+		mainLog.append(message);
+	}
 	
 	/** Method to start the simulation*/
 	public static boolean startSimulation(){
-		System.out.println("------------------SIMULATION STARTED------------------");
+		writeLog(null, "=========================SIMULATION STARTED=========================");
+		
+		
 		return true;
 	}
 

@@ -1,10 +1,15 @@
 package haxm.core;
-public class VirtEvent{
+public class VirtEvent implements Comparable<VirtEvent>{
 	public static final int INVALID = -1;
 	public static final int CREATE = 1;
 	public static final int SEND = 2;
 	public static final int WAKEUP = 3;
-
+	private static int numEvents = 0;	
+	
+	public VirtEvent(){
+		this.id = ++numEvents;	//A unique ID for each event
+	}
+	private int id;
 	/**Source of the event.*/
 	private int sourceId;
 
@@ -22,5 +27,18 @@ public class VirtEvent{
 
 	/**Data of the event. Contains additional information to process the event.*/
 	private Object data;
+
+	@Override
+	public int compareTo(VirtEvent event) {
+		if(this.time < event.time) 
+			return -1;
+		else if(this.time > event.time)
+			return 1;
+		else if(this.id < event.id)
+			return -1;
+		else if(this.id > event.id)
+			return 1;
+		return 0;
+	}
 		
 }

@@ -6,9 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class LogFile {
-	File logFile;
 	String basepath = "logs/";
+	
+	File logFile;
 	BufferedWriter bufferedWriter;
+	
 	public LogFile(String path){
 		try{
 			logFile = new File(basepath + path);
