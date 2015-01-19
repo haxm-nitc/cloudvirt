@@ -4,6 +4,8 @@ import haxm.LogFile;
 import haxm.VirtState;
 import haxm.components.CloudRegistry;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CloudVirt{
@@ -38,11 +40,82 @@ public class CloudVirt{
 	}
 	
 	/** Method to start the simulation*/
-	public static boolean startSimulation(){
+	public static double startSimulation(){
+		double duration;
 		writeLog(null, "=========================SIMULATION STARTED=========================");
 		
+		duration = simulate();
+		invalidateParams();
+		finishSimulation();
 		
-		return true;
+		writeLog(null, "=========================SIMULATION ENDED=========================");
+		
+		return duration;
+	}
+
+	private static void finishSimulation() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void invalidateParams() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static double simulate() {
+
+		while( (!toTerminate()) || nextTick()){
+			if(toPause()){
+				
+			}
+		}
+
+		// TODO Auto-generated method stub
+		return 0.0;
+		
+	}
+
+	private static boolean toPause() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private static boolean nextTick() {
+		boolean processmore;
+		if(globalQueue.empty()){
+			return false;
+		}else{
+			processmore = true;
+			List<VirtEvent> removeList = new LinkedList<VirtEvent>();
+			VirtEvent currentEvent = globalQueue.next();
+			VirtEvent firstEvent = currentEvent;
+			
+			do{
+				processEvent(currentEvent);
+				removeList.add(currentEvent);
+				if(globalQueue.empty()){
+					processmore = false;
+				}else{
+					currentEvent = globalQueue.next();
+					if(firstEvent.getTime() != currentEvent.getTime()){
+						processmore = false;
+					}
+				}
+			}while(processmore);
+			globalQueue.removeAll(removeList);
+			return globalQueue.empty();
+		}
+	}
+
+	private static void processEvent(VirtEvent currentEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static boolean toTerminate() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/** Method to stop the simulation*/

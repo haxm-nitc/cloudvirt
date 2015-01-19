@@ -1,12 +1,18 @@
 package haxm.components;
 
+import java.util.List;
+
 import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 
 public class Datacenter extends VirtEntity{
 	
-	private DatacenterConfiguration datacenterConfiguration;
-
+	private VMProvisioningPolicy vmProvisioningPolicy;
+	
+	private List<Host> hostList;
+	
+	
+	
 	public Datacenter(String name) {
 		super(name);
 		

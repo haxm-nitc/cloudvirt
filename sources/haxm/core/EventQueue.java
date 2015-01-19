@@ -1,6 +1,7 @@
 package haxm.core;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,7 +20,16 @@ public class EventQueue {
 	public int size(){
 		return eventCollection.size();
 	}
+	public boolean empty(){
+		return eventCollection.isEmpty();
+	}
+	public Iterator<VirtEvent> iterator(){
+		return eventCollection.iterator();
+	}
 	public void clear(){
 		eventCollection.clear();
+	}
+	public VirtEvent next(){
+		return eventCollection.iterator().next();
 	}
 }

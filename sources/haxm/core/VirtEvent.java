@@ -40,5 +40,10 @@ public class VirtEvent implements Comparable<VirtEvent>{
 			return 1;
 		return 0;
 	}
+
+	public Object getTime() {
+		// TODO Auto-generated method stub
+		return time;
+	}
 		
 }
