@@ -2,8 +2,11 @@ package haxm.core;
 
 import haxm.LogFile;
 import haxm.VirtState;
+import haxm.VirtStateEnum;
 import haxm.components.CloudRegistry;
+import haxm.holders.EntityHolder;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,23 +17,46 @@ public class CloudVirt{
 	public static  final String CLOUDVIRT_VERSION_STRING = "1.0";
 	
 	/**A CloudRegistry variable that has the information regarding the cloud resources*/
-	private static CloudRegistry cloudRegistry;
+	public static CloudRegistry cloudRegistry;
 	
 	/**An event queue to hold the events*/
-	private static EventQueue globalQueue;
+	public static EventQueue globalQueue;
 	
 	/**A list of simulation entities*/	
-	private static List<VirtEntity> entityList;
+	private static EntityHolder entityHolder;
 	
 	/**A State object to maintain the state of simulation*/	
 	private static VirtState simulationState;
 	
 	/**A time variable to represent clock time of the simulation*/
-	private  static double time;
+	private  static double currentTime;
 	
-	private static LogFile mainLog = new LogFile("log.txt");
-	private static LogFile eventsLog = new LogFile("events.txt");
-	private static LogFile entityLog = new LogFile("entity.txt");
+	public static LogFile mainLog;
+	public static LogFile eventsLog;
+	public static LogFile entityLog;
+	
+	public static void initSimulationEnvironment(){
+		
+		globalQueue =  new EventQueue();
+		entityHolder = new EntityHolder();
+		simulationState = new VirtState(VirtStateEnum.INVALID);
+		currentTime = 0.00;
+		
+		mainLog = new LogFile("log.txt");
+		eventsLog = new LogFile("events.txt");
+		entityLog = new LogFile("entity.txt");
+		
+		cloudRegistry = new CloudRegistry("Cloud Registry 1");
+		
+	}
+	
+	public static void setCurrentTime(double time){
+		currentTime = time;
+	}
+
+	public static double getCurrentTime(){
+		return currentTime;
+	}
 	
 	public static void writeLog(LogFile logFile, String message){
 		if(logFile != null){
@@ -45,72 +71,102 @@ public class CloudVirt{
 		writeLog(null, "=========================SIMULATION STARTED=========================");
 		
 		duration = simulate();
-		invalidateParams();
-		finishSimulation();
 		
 		writeLog(null, "=========================SIMULATION ENDED=========================");
+		
+		
+		finishSimulation();
+		
+		
 		
 		return duration;
 	}
 
+	
 	private static void finishSimulation() {
-		// TODO Auto-generated method stub
+		invalidateSimulationEnvironment();		
+	}
+	
+
+	private static void invalidateSimulationEnvironment() {
+		cloudRegistry = null;
+		globalQueue =  null;
+		entityHolder = null;
+		simulationState = null;
+		currentTime = -1;
 		
+		mainLog.close();
+		mainLog = null;
+		
+		eventsLog.close();
+		eventsLog = null;
+		
+		entityLog.close();
+		entityLog = null;
 	}
 
-	private static void invalidateParams() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	private static double simulate() {
-
-		while( (!toTerminate()) || nextTick()){
-			if(toPause()){
-				
-			}
+		if(!isRunning()){
+			simulationState.setState(VirtStateEnum.RUNNING);
+			entityHolder.startEntities();
 		}
-
-		// TODO Auto-generated method stub
-		return 0.0;
-		
+		while( (!toTerminate()) && nextTick()){
+		}
+		return getCurrentTime();		
 	}
 
-	private static boolean toPause() {
+	
+	
+
+	
+	
+	private static boolean isRunning() {
 		// TODO Auto-generated method stub
-		return false;
+		if(simulationState.getState() == VirtStateEnum.RUNNING){
+			return true;
+		}else{	
+			return false;
+		}	
 	}
 
 	private static boolean nextTick() {
-		boolean processmore;
+		
+		entityHolder.runAll();
+		
 		if(globalQueue.empty()){
 			return false;
 		}else{
-			processmore = true;
-			List<VirtEvent> removeList = new LinkedList<VirtEvent>();
-			VirtEvent currentEvent = globalQueue.next();
+			boolean processmore = true;
+			VirtEvent currentEvent = globalQueue.extract();
 			VirtEvent firstEvent = currentEvent;
 			
 			do{
 				processEvent(currentEvent);
-				removeList.add(currentEvent);
 				if(globalQueue.empty()){
 					processmore = false;
 				}else{
-					currentEvent = globalQueue.next();
+					currentEvent = globalQueue.extract();
 					if(firstEvent.getTime() != currentEvent.getTime()){
 						processmore = false;
 					}
 				}
 			}while(processmore);
-			globalQueue.removeAll(removeList);
-			return globalQueue.empty();
+			return (!globalQueue.empty());
 		}
 	}
 
 	private static void processEvent(VirtEvent currentEvent) {
-		// TODO Auto-generated method stub
-		
+		setCurrentTime(currentEvent.getTime());
+		switch(currentEvent.getType()){
+			case INVALID:
+				break;
+			case SEND:
+				int destinationId = currentEvent.getDestinationId();
+				VirtEntity destinationEntity = entityHolder.getEntityByID(destinationId);
+				destinationEntity.addToLocalQueue(currentEvent);
+				break;
+		}
 	}
 
 	private static boolean toTerminate() {
@@ -120,6 +176,7 @@ public class CloudVirt{
 
 	/** Method to stop the simulation*/
 	public static boolean stopSimulation(){
+		System.out.println("shutdown");
 		return true;
 	}
 
@@ -131,6 +188,10 @@ public class CloudVirt{
 	/** Method to abruptly terminate the simulation*/
 	public static boolean abruptlyTerminateSimulation(){
 		return true;
+	}
+	
+	public static void addEntity(VirtEntity entity){
+		entityHolder.addEntity(entity);
 	}
 }
 

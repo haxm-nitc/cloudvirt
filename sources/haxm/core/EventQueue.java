@@ -6,7 +6,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class EventQueue {
-	private SortedSet<VirtEvent> eventCollection = new TreeSet<VirtEvent>();
+	private SortedSet<VirtEvent> eventCollection;
+
+	public EventQueue() {
+		super();
+		eventCollection = new TreeSet<VirtEvent>();
+	}
 	
 	public void addEvent(VirtEvent event){
 		eventCollection.add(event);
@@ -29,7 +34,13 @@ public class EventQueue {
 	public void clear(){
 		eventCollection.clear();
 	}
-	public VirtEvent next(){
-		return eventCollection.iterator().next();
+	public VirtEvent extract(){
+		if(empty()){
+			return null;
+		}else{
+			VirtEvent event = eventCollection.iterator().next();
+			removeEvent(event);
+			return event;
+		}
 	}
 }

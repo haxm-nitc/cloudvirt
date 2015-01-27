@@ -2,6 +2,9 @@ package haxm.components;
 
 import java.util.List;
 
+import haxm.VirtStateEnum;
+import haxm.core.CloudVirt;
+import haxm.core.TagEnum;
 import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 
@@ -18,19 +21,20 @@ public class Datacenter extends VirtEntity{
 		
 	}
 	@Override
-	protected boolean startEntity() {
+	public boolean startEntity() {
+		this.currentState.setState(VirtStateEnum.RUNNING);
+		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0);
+		return false;
+	}
+
+	@Override
+	public boolean shutdownEntity() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected boolean shutdownEntity() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected boolean processEvent(VirtEvent event) {
+	public boolean processEvent(VirtEvent event) {
 		// TODO Auto-generated method stub
 		return false;
 	}

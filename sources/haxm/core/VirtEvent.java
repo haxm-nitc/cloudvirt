@@ -1,23 +1,18 @@
 package haxm.core;
 public class VirtEvent implements Comparable<VirtEvent>{
-	public static final int INVALID = -1;
-	public static final int CREATE = 1;
-	public static final int SEND = 2;
-	public static final int WAKEUP = 3;
 	private static int numEvents = 0;	
 	
-	public VirtEvent(){
-		this.id = ++numEvents;	//A unique ID for each event
-	}
 	private int id;
+	
+
 	/**Source of the event.*/
 	private int sourceId;
 
 	/**Destination of the event.*/
 	private int destinationId;
 
-	/**Type of the event. Can be INVALID, CREATE, SEND, WAKEUP.*/
-	private int type;
+	/**Type of the event. Can be INVALID, SEND.*/
+	private TagEnum type;
 
 	/**Tag of the event. Specifies the purpose of the event.*/
 	private TagEnum tag;
@@ -27,6 +22,24 @@ public class VirtEvent implements Comparable<VirtEvent>{
 
 	/**Data of the event. Contains additional information to process the event.*/
 	private Object data;
+
+	private void initParams(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time, Object data){
+		this.id = ++numEvents;	//A unique ID for each event
+		this.sourceId = sourceId;
+		this.destinationId = destinationId;
+		this.type = type;
+		this.tag = tag;
+		this.time = time;
+		this.data = data;
+	}
+	
+	public VirtEvent(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time){
+		initParams(sourceId, destinationId, type, tag, time, null);
+	}
+
+	public VirtEvent(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time, Object data){
+		initParams(sourceId, destinationId, type, tag, time, data);
+	}
 
 	@Override
 	public int compareTo(VirtEvent event) {
@@ -41,9 +54,47 @@ public class VirtEvent implements Comparable<VirtEvent>{
 		return 0;
 	}
 
-	public Object getTime() {
-		// TODO Auto-generated method stub
-		return time;
+	public int getId() {
+		return id;
 	}
-		
+
+	public int getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(int sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public int getDestinationId() {
+		return destinationId;
+	}
+
+	public void setDestinationId(int destinationId) {
+		this.destinationId = destinationId;
+	}
+
+	public TagEnum getTag() {
+		return tag;
+	}
+
+	public void setTag(TagEnum tag) {
+		this.tag = tag;
+	}
+
+	public void setType(TagEnum type) {
+		this.type = type;
+	}
+
+	public TagEnum getType(){
+		return type;
+	}
+
+	public void setTime(double time) {
+		this.time = time;
+	}
+
+	public double getTime() {
+		return time;
+	}	
 }

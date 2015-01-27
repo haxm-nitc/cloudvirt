@@ -1,11 +1,12 @@
-import haxm.*;
+import haxm.components.Datacenter;
+import haxm.core.CloudVirt;
+
 public class Test {
 
 	public static void main(String[] args) {
-		LogFile lf = new LogFile("test.txt");
-		lf.append("this is a test string");
-		lf.close();
-
+		CloudVirt.initSimulationEnvironment();
+		Datacenter datacenter1 = new Datacenter("Datacenter1");
+		CloudVirt.startSimulation();
+		CloudVirt.stopSimulation();	
 	}
-
 }
