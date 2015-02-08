@@ -10,8 +10,11 @@ public abstract class VirtEntity{
 	/**A unique Entity Identifier*/
 	private int id;
 	/**/
-	private String name;
+	protected String name;
 	
+	public String getName() {
+		return name;
+	}
 	/**Current State of the entity*/
 	protected VirtState currentState;
 
@@ -57,11 +60,19 @@ public abstract class VirtEntity{
 	}
 	
 	public void addToGlobalQueue(VirtEvent event){
-		
+		String message = "EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
 		CloudVirt.globalQueue.addEvent(event);
 	}
 	public void run() {
-		while(!localQueue.empty()){			
+		while(!localQueue.isEmpty()){			
 			processEvent(localQueue.extract());
 		}
 		

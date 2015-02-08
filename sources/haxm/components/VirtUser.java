@@ -1,5 +1,8 @@
 package haxm.components;
 
+import haxm.VirtStateEnum;
+import haxm.core.CloudVirt;
+import haxm.core.TagEnum;
 import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 
@@ -10,13 +13,16 @@ public class VirtUser extends VirtEntity{
 
 	@Override
 	public boolean startEntity() {
-		// TODO Auto-generated method stub
+		this.currentState.setState(VirtStateEnum.RUNNING);
+		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
+		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.DATACENTERS_INFO_REQUEST, 0.0);
 		return false;
 	}
 
 	@Override
 	public boolean shutdownEntity() {
-		// TODO Auto-generated method stub
+		this.currentState.setState(VirtStateEnum.FINISHED);
+		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " finished at " + CloudVirt.getCurrentTime());
 		return false;
 	}
 

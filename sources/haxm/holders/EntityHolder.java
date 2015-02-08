@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EntityHolder {
+	
 	List<VirtEntity> entityList;
 	HashMap<Integer, VirtEntity> entityMap;
 	
@@ -25,6 +26,10 @@ public class EntityHolder {
 		return entityMap.get(id);
 	}
 
+	public String getEntityNameByID(int id){
+		return entityMap.get(id).getName();
+	}
+
 	public void startEntities() {
 		for(VirtEntity entity:entityList){
 			entity.startEntity();
@@ -36,9 +41,12 @@ public class EntityHolder {
 			if(entity.getCurrentState() == VirtStateEnum.RUNNING){
 				entity.run();
 			}
-		}
-		
+		}	
 	}
-	
-	
+
+	public void shutdownEntities() {
+		for(VirtEntity entity:entityList){
+			entity.shutdownEntity();
+		}	
+	}
 }

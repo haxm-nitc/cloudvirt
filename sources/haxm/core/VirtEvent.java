@@ -1,9 +1,8 @@
 package haxm.core;
 public class VirtEvent implements Comparable<VirtEvent>{
+
 	private static int numEvents = 0;	
-	
 	private int id;
-	
 
 	/**Source of the event.*/
 	private int sourceId;
@@ -23,6 +22,14 @@ public class VirtEvent implements Comparable<VirtEvent>{
 	/**Data of the event. Contains additional information to process the event.*/
 	private Object data;
 
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
 	private void initParams(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time, Object data){
 		this.id = ++numEvents;	//A unique ID for each event
 		this.sourceId = sourceId;
@@ -40,20 +47,6 @@ public class VirtEvent implements Comparable<VirtEvent>{
 	public VirtEvent(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time, Object data){
 		initParams(sourceId, destinationId, type, tag, time, data);
 	}
-
-	@Override
-	public int compareTo(VirtEvent event) {
-		if(this.time < event.time) 
-			return -1;
-		else if(this.time > event.time)
-			return 1;
-		else if(this.id < event.id)
-			return -1;
-		else if(this.id > event.id)
-			return 1;
-		return 0;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -97,4 +90,17 @@ public class VirtEvent implements Comparable<VirtEvent>{
 	public double getTime() {
 		return time;
 	}	
+	
+	@Override
+	public int compareTo(VirtEvent event) {
+		if(this.time < event.time) 
+			return -1;
+		else if(this.time > event.time)
+			return 1;
+		else if(this.id < event.id)
+			return -1;
+		else if(this.id > event.id)
+			return 1;
+		return 0;
+	}
 }

@@ -10,26 +10,33 @@ import haxm.core.VirtEvent;
 
 public class Datacenter extends VirtEntity{
 	
-	private VMProvisioningPolicy vmProvisioningPolicy;
+	private DatacenterConfiguration datacenterConfiguration;
 	
-	private List<Host> hostList;
-	
-	
-	
-	public Datacenter(String name) {
+	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration) {
 		super(name);
-		
+		this.datacenterConfiguration = datacenterConfiguration;		
 	}
+	
+	public DatacenterConfiguration getDatacenterConfiguration() {
+		return datacenterConfiguration;
+	}
+	
+	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
+		this.datacenterConfiguration = datacenterConfiguration;
+	}
+
 	@Override
 	public boolean startEntity() {
 		this.currentState.setState(VirtStateEnum.RUNNING);
-		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0);
+		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
+		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0, datacenterConfiguration);
 		return false;
 	}
 
 	@Override
 	public boolean shutdownEntity() {
-		// TODO Auto-generated method stub
+		this.currentState.setState(VirtStateEnum.FINISHED);
+		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " finished at " + CloudVirt.getCurrentTime());
 		return false;
 	}
 

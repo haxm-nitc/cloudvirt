@@ -23,7 +23,7 @@ public class CloudVirt{
 	public static EventQueue globalQueue;
 	
 	/**A list of simulation entities*/	
-	private static EntityHolder entityHolder;
+	public static EntityHolder entityHolder;
 	
 	/**A State object to maintain the state of simulation*/	
 	private static VirtState simulationState;
@@ -46,7 +46,7 @@ public class CloudVirt{
 		eventsLog = new LogFile("events.txt");
 		entityLog = new LogFile("entity.txt");
 		
-		cloudRegistry = new CloudRegistry("Cloud Registry 1");
+		cloudRegistry = new CloudRegistry("CloudRegistry1");
 		
 	}
 	
@@ -69,25 +69,19 @@ public class CloudVirt{
 	public static double startSimulation(){
 		double duration;
 		writeLog(null, "=========================SIMULATION STARTED=========================");
-		
-		duration = simulate();
-		
-		writeLog(null, "=========================SIMULATION ENDED=========================");
-		
-		
+		duration = simulate();		
 		finishSimulation();
-		
-		
-		
 		return duration;
 	}
 
 	
-	private static void finishSimulation() {
-		invalidateSimulationEnvironment();		
+	public static void finishSimulation() {
+		entityHolder.runAll();
+		entityHolder.shutdownEntities();
+		writeLog(null, "=========================SIMULATION FINISHED==========================");
+		invalidateSimulationEnvironment();
 	}
 	
-
 	private static void invalidateSimulationEnvironment() {
 		cloudRegistry = null;
 		globalQueue =  null;
@@ -103,11 +97,11 @@ public class CloudVirt{
 		
 		entityLog.close();
 		entityLog = null;
+		
 	}
 
-	
 	private static double simulate() {
-		if(!isRunning()){
+		if(simulationState.getState() != VirtStateEnum.RUNNING){
 			simulationState.setState(VirtStateEnum.RUNNING);
 			entityHolder.startEntities();
 		}
@@ -115,35 +109,20 @@ public class CloudVirt{
 		}
 		return getCurrentTime();		
 	}
-
 	
-	
-
-	
-	
-	private static boolean isRunning() {
-		// TODO Auto-generated method stub
-		if(simulationState.getState() == VirtStateEnum.RUNNING){
-			return true;
-		}else{	
-			return false;
-		}	
-	}
-
 	private static boolean nextTick() {
 		
 		entityHolder.runAll();
 		
-		if(globalQueue.empty()){
+		if(globalQueue.isEmpty()){
 			return false;
 		}else{
 			boolean processmore = true;
 			VirtEvent currentEvent = globalQueue.extract();
-			VirtEvent firstEvent = currentEvent;
-			
+			VirtEvent firstEvent = currentEvent;			
 			do{
 				processEvent(currentEvent);
-				if(globalQueue.empty()){
+				if(globalQueue.isEmpty()){
 					processmore = false;
 				}else{
 					currentEvent = globalQueue.extract();
@@ -152,7 +131,7 @@ public class CloudVirt{
 					}
 				}
 			}while(processmore);
-			return (!globalQueue.empty());
+			return (!globalQueue.isEmpty());
 		}
 	}
 
@@ -173,26 +152,8 @@ public class CloudVirt{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	/** Method to stop the simulation*/
-	public static boolean stopSimulation(){
-		System.out.println("shutdown");
-		return true;
-	}
-
-	/** Method to pause the simulation*/
-	public static boolean pauseSimulation(){
-		return true;
-	}
-
-	/** Method to abruptly terminate the simulation*/
-	public static boolean abruptlyTerminateSimulation(){
-		return true;
-	}
 	
 	public static void addEntity(VirtEntity entity){
 		entityHolder.addEntity(entity);
 	}
 }
-
-
