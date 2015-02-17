@@ -12,12 +12,12 @@ import java.util.List;
 
 public class CloudRegistry extends VirtEntity{
 	
-	private List<Datacenter> datacenterList;
-	private List<DatacenterConfiguration> datacenterConfigurationsList;
+	//private List<Datacenter> datacenterList;
+	private List<Integer> datacenterIdList;
 	
 	public CloudRegistry(String name) {
 		super(name);
-		datacenterList = new ArrayList<Datacenter>();
+		datacenterIdList = new ArrayList<Integer>();
 	}
 
 	public boolean startEntity(){
@@ -35,12 +35,22 @@ public class CloudRegistry extends VirtEntity{
 	public boolean processEvent(VirtEvent event){
 		switch(event.getTag()){
 			case REGISTER_DATACENTER:
-				datacenterConfigurationsList.add((DatacenterConfiguration) event.getData());
+				handle_REGISTER_DATACENTER(event);
 				break;
 			case DATACENTERS_INFO_REQUEST:
-				schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTERS_INFO_RESPONSE, 0.00, datacenterConfigurationsList);
+				handle_DATACENTERS_INFO_REQUEST(event);
+	
 				break;
 		}
 		return true;
+	}
+
+	private void handle_DATACENTERS_INFO_REQUEST(VirtEvent event) {
+		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTERS_INFO_RESPONSE, 0.00, datacenterIdList);
+		
+	}
+
+	private void handle_REGISTER_DATACENTER(VirtEvent event) {
+		datacenterIdList.add((Integer) event.getData());
 	}
 }

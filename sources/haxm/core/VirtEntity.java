@@ -72,7 +72,7 @@ public abstract class VirtEntity{
 		CloudVirt.globalQueue.addEvent(event);
 	}
 	public void run() {
-		while(!localQueue.isEmpty()){			
+		while(!localQueue.isEmpty()){
 			processEvent(localQueue.extract());
 		}
 		

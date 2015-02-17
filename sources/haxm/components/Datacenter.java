@@ -15,6 +15,7 @@ public class Datacenter extends VirtEntity{
 	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration) {
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
+		this.datacenterConfiguration.setDatacenterId(getId());
 	}
 	
 	public DatacenterConfiguration getDatacenterConfiguration() {
@@ -23,13 +24,14 @@ public class Datacenter extends VirtEntity{
 	
 	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
 		this.datacenterConfiguration = datacenterConfiguration;
+		this.datacenterConfiguration.setDatacenterId(getId());
 	}
 
 	@Override
 	public boolean startEntity() {
 		this.currentState.setState(VirtStateEnum.RUNNING);
 		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
-		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0, datacenterConfiguration);
+		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0, getId());
 		return false;
 	}
 
@@ -42,8 +44,18 @@ public class Datacenter extends VirtEntity{
 
 	@Override
 	public boolean processEvent(VirtEvent event) {
-		// TODO Auto-generated method stub
+		
+		switch(event.getTag()){
+			case DATACENTER_CONFIGURATION_REQUEST:
+				handle_DATACENTER_CONFIGURATION_REQUEST(event);
+				break;
+		}
 		return false;
+	}
+
+	private void handle_DATACENTER_CONFIGURATION_REQUEST(VirtEvent event) {
+		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_RESPONSE, 0.0,  getDatacenterConfiguration());
+		
 	}
 	
 

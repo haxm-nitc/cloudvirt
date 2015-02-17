@@ -1,5 +1,10 @@
 package haxm.components;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import policies.VirtUserPolicy;
 import haxm.VirtStateEnum;
 import haxm.core.CloudVirt;
 import haxm.core.TagEnum;
@@ -7,8 +12,17 @@ import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 
 public class VirtUser extends VirtEntity{
-	public VirtUser(String name){
+	
+	private List<Integer> availableDatacenterIdList;
+	private List<Integer> selectedDatacenterIdList;
+	private List<DatacenterConfiguration> availableConfigurationsList;
+	private VirtUserPolicy userPolicy;
+	public VirtUser(String name, VirtUserPolicy policy){
 		super(name);
+		availableDatacenterIdList = new ArrayList<Integer>();
+		selectedDatacenterIdList = new ArrayList<Integer>();
+		availableConfigurationsList = new ArrayList<DatacenterConfiguration>();
+		userPolicy = policy;
 	}
 
 	@Override
@@ -29,7 +43,31 @@ public class VirtUser extends VirtEntity{
 	@Override
 	public boolean processEvent(VirtEvent event) {
 		// TODO Auto-generated method stub
+		switch(event.getTag()){
+			case DATACENTERS_INFO_RESPONSE:
+				handle_DATACENTERS_INFO_RESPONSE(event);
+			case DATACENTER_CONFIGURATION_RESPONSE:
+				handle_DATACENTER_CONFIGURATION_RESPONSE(event);
+				
+		}
 		return false;
+	}
+
+	private void handle_DATACENTER_CONFIGURATION_RESPONSE(VirtEvent event) {
+		// TODO Auto-generated method stub
+		availableConfigurationsList.add((DatacenterConfiguration) event.getData());
+		if(availableConfigurationsList.size() == availableDatacenterIdList.size()){
+			selectedDatacenterIdList = userPolicy.selectDatacenters(availableConfigurationsList);
+		}
+		
+	}
+
+	private void handle_DATACENTERS_INFO_RESPONSE(VirtEvent event) {
+		availableDatacenterIdList = (List<Integer>) event.getData();
+		//TO-DO send events to all dc
+		for(int destinationId : availableDatacenterIdList){
+			schedule(destinationId, TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_REQUEST, 0.0);
+		}
 	}
 
 }

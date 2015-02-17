@@ -107,6 +107,7 @@ public class CloudVirt{
 		}
 		while( (!toTerminate()) && nextTick()){
 		}
+		
 		return getCurrentTime();		
 	}
 	
@@ -131,7 +132,7 @@ public class CloudVirt{
 					}
 				}
 			}while(processmore);
-			return (!globalQueue.isEmpty());
+			return true;
 		}
 	}
 

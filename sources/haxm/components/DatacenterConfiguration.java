@@ -3,6 +3,16 @@ package haxm.components;
 import java.util.List;
 
 public class DatacenterConfiguration {
+	
+	private int datacenterId;
+
+	public int getDatacenterId() {
+		return datacenterId;
+	}
+
+	public void setDatacenterId(int datacenterId) {
+		this.datacenterId = datacenterId;
+	}
 
 	public List<Host> hostList;
 	
