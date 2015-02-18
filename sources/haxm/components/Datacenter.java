@@ -44,7 +44,17 @@ public class Datacenter extends VirtEntity{
 
 	@Override
 	public boolean processEvent(VirtEvent event) {
-		
+/*		
+		String message = "[DC PE] EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
+*/		
 		switch(event.getTag()){
 			case DATACENTER_CONFIGURATION_REQUEST:
 				handle_DATACENTER_CONFIGURATION_REQUEST(event);
@@ -54,6 +64,7 @@ public class Datacenter extends VirtEntity{
 	}
 
 	private void handle_DATACENTER_CONFIGURATION_REQUEST(VirtEvent event) {
+		
 		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_RESPONSE, 0.0,  getDatacenterConfiguration());
 		
 	}

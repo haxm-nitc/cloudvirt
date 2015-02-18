@@ -42,12 +42,25 @@ public class VirtUser extends VirtEntity{
 
 	@Override
 	public boolean processEvent(VirtEvent event) {
-		// TODO Auto-generated method stub
+/*		
+		String message = "[VU PE] EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
+		
+*/
 		switch(event.getTag()){
 			case DATACENTERS_INFO_RESPONSE:
 				handle_DATACENTERS_INFO_RESPONSE(event);
+				break;
 			case DATACENTER_CONFIGURATION_RESPONSE:
 				handle_DATACENTER_CONFIGURATION_RESPONSE(event);
+				break;
 				
 		}
 		return false;

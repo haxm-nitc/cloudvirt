@@ -51,4 +51,7 @@ public class EventQueue {
 			return event;
 		}
 	}
+	public VirtEvent peek(){
+		return eventCollection.iterator().next();
+	}
 }

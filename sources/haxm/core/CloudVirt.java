@@ -119,32 +119,48 @@ public class CloudVirt{
 			return false;
 		}else{
 			boolean processmore = true;
-			VirtEvent currentEvent = globalQueue.extract();
-			VirtEvent firstEvent = currentEvent;			
+			List<VirtEvent> removeList = new LinkedList<VirtEvent>();
+			Iterator<VirtEvent> eventIterator = globalQueue.iterator();
+			VirtEvent currentEvent = eventIterator.next();
+			VirtEvent firstEvent = currentEvent;
 			do{
 				processEvent(currentEvent);
-				if(globalQueue.isEmpty()){
+				removeList.add(currentEvent);
+				if(!eventIterator.hasNext()){
 					processmore = false;
 				}else{
-					currentEvent = globalQueue.extract();
+					currentEvent = eventIterator.next();
 					if(firstEvent.getTime() != currentEvent.getTime()){
 						processmore = false;
 					}
 				}
 			}while(processmore);
+			
+			globalQueue.removeAll(removeList);
 			return true;
-		}
+		}	
 	}
 
-	private static void processEvent(VirtEvent currentEvent) {
-		setCurrentTime(currentEvent.getTime());
-		switch(currentEvent.getType()){
+	private static void processEvent(VirtEvent event) {
+/*		
+		String message = "[GtoL] EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
+*/
+		setCurrentTime(event.getTime());
+		switch(event.getType()){
 			case INVALID:
 				break;
 			case SEND:
-				int destinationId = currentEvent.getDestinationId();
+				int destinationId = event.getDestinationId();
 				VirtEntity destinationEntity = entityHolder.getEntityByID(destinationId);
-				destinationEntity.addToLocalQueue(currentEvent);
+				destinationEntity.addToLocalQueue(event);
 				break;
 		}
 	}

@@ -48,6 +48,17 @@ public abstract class VirtEntity{
 	public abstract boolean processEvent(VirtEvent event);
 	
 	public void addToLocalQueue(VirtEvent event) {
+/*		
+		String message = "[Local] EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
+*/		
 		this.localQueue.addEvent(event);		
 	}
 	
@@ -60,7 +71,7 @@ public abstract class VirtEntity{
 	}
 	
 	public void addToGlobalQueue(VirtEvent event){
-		String message = "EventID:"+event.getId()
+		String message = "[Global] EventID:"+event.getId()
 				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
 				+",ID-"+event.getSourceId()
 				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())

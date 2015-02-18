@@ -33,6 +33,17 @@ public class CloudRegistry extends VirtEntity{
 	}
 	
 	public boolean processEvent(VirtEvent event){
+/*		
+		String message = "[CR PE] EventID:"+event.getId()
+				+"	Source:"+CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())
+				+",ID-"+event.getSourceId()
+				+"	Destination:"+CloudVirt.entityHolder.getEntityNameByID(event.getDestinationId())
+				+",ID-"+event.getDestinationId()
+				+ "	Type:"+event.getType()
+				+"	Tag:"+event.getTag()
+				+"	Time:"+event.getTime();
+		CloudVirt.writeLog(CloudVirt.eventsLog, message);
+*/		
 		switch(event.getTag()){
 			case REGISTER_DATACENTER:
 				handle_REGISTER_DATACENTER(event);
