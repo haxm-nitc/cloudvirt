@@ -6,22 +6,12 @@ public class DatacenterConfiguration {
 	
 	private int datacenterId;
 
-	public int getDatacenterId() {
-		return datacenterId;
-	}
-
-	public void setDatacenterId(int datacenterId) {
-		this.datacenterId = datacenterId;
-	}
-
 	public List<Host> hostList;
 	
 	public List<Storage> storageList;
 	
 	public double bandwidth;
-	
-	public VMProvisioningPolicy vmProvisioningPolicy;;
-	
+		
 	public double costPerMemory;
 	
 	public double costPerBW;
@@ -36,7 +26,6 @@ public class DatacenterConfiguration {
 		this.hostList = hostList;
 		this.storageList = storageList;
 		this.bandwidth = bandwidth;
-		this.vmProvisioningPolicy = vmProvisioningPolicy;
 		this.costPerMemory = costPerMemory;
 		this.costPerBW = costPerBW;
 		this.costPerStorage = costPerStorage;
@@ -66,14 +55,6 @@ public class DatacenterConfiguration {
 		this.bandwidth = bandwidth;
 	}
 
-	public VMProvisioningPolicy getVmProvisioningPolicy() {
-		return vmProvisioningPolicy;
-	}
-
-	public void setVmProvisioningPolicy(VMProvisioningPolicy vmProvisioningPolicy) {
-		this.vmProvisioningPolicy = vmProvisioningPolicy;
-	}
-
 	public double getCostPerMemory() {
 		return costPerMemory;
 	}
@@ -96,5 +77,13 @@ public class DatacenterConfiguration {
 
 	public void setCostPerStorage(double costPerStorage) {
 		this.costPerStorage = costPerStorage;
+	}
+	
+	public int getDatacenterId() {
+		return datacenterId;
+	}
+
+	public void setDatacenterId(int datacenterId) {
+		this.datacenterId = datacenterId;
 	}
 }

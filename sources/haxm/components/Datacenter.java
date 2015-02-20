@@ -12,6 +12,8 @@ public class Datacenter extends VirtEntity{
 	
 	private DatacenterConfiguration datacenterConfiguration;
 	
+	public VMProvisioningPolicy vmProvisioningPolicy;
+	
 	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration) {
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
