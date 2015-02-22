@@ -11,6 +11,8 @@ import haxm.components.VirtUser;
 import haxm.core.CloudVirt;
 import haxm.policies.TaskSchedulerPolicy;
 import haxm.policies.TaskSchedulerPolicySimple;
+import haxm.policies.VMProvisioningPolicy;
+import haxm.policies.VMProvisioningPolicySimple;
 import haxm.policies.VirtUserPolicySimple;
 
 public class Test {
@@ -39,8 +41,9 @@ public class Test {
 		Host host = new Host(vmm, storage, memory, bw);
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, null, 0, 0, 0);
-		Datacenter datacenter = new Datacenter(string, config);
+		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, 0, 0, 0);
+		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		return datacenter;
 	}
 }

@@ -1,5 +1,7 @@
 package haxm.components;
 
+
+
 import java.util.List;
 
 public class DatacenterConfiguration {
@@ -19,8 +21,7 @@ public class DatacenterConfiguration {
 	public double costPerStorage;
 
 	public DatacenterConfiguration(List<Host> hostList,
-			List<Storage> storageList, double bandwidth,
-			VMProvisioningPolicy vmProvisioningPolicy, double costPerMemory,
+			List<Storage> storageList, double bandwidth, double costPerMemory,
 			double costPerBW, double costPerStorage) {
 		super();
 		this.hostList = hostList;

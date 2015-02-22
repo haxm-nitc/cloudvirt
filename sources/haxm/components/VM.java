@@ -1,8 +1,12 @@
 package haxm.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import haxm.policies.TaskSchedulerPolicy;
 
 public class VM {
+	private static int numVms = 0; 
 	private int vmId;
 	private int datacenterId;
 	private int userId;
@@ -12,6 +16,7 @@ public class VM {
 	private double allocatedBW;
 	private double allocatedMemory;
 	private TaskSchedulerPolicy taskSchedulerPolicy;
+	
 	/**
 	 * @param userId
 	 * @param requestedMemory
@@ -21,10 +26,12 @@ public class VM {
 	public VM(int userId, long requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
+		this.setVmId(numVms++);
 		this.userId = userId;
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
+		
 	}
 	/**
 	 * @return the vmId

@@ -7,17 +7,34 @@ import haxm.core.CloudVirt;
 import haxm.core.TagEnum;
 import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
+import haxm.policies.VMProvisioningPolicy;
 
 public class Datacenter extends VirtEntity{
+	
 	
 	private DatacenterConfiguration datacenterConfiguration;
 	
 	public VMProvisioningPolicy vmProvisioningPolicy;
 	
-	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration) {
+	/**
+	 * @return the vmProvisioningPolicy
+	 */
+	public VMProvisioningPolicy getVmProvisioningPolicy() {
+		return vmProvisioningPolicy;
+	}
+
+	/**
+	 * @param vmProvisioningPolicy the vmProvisioningPolicy to set
+	 */
+	public void setVmProvisioningPolicy(VMProvisioningPolicy vmProvisioningPolicy) {
+		this.vmProvisioningPolicy = vmProvisioningPolicy;
+	}
+
+	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration, VMProvisioningPolicy vmProvisioningPolicy) {
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
 		this.datacenterConfiguration.setDatacenterId(getId());
+		this.setVmProvisioningPolicy(vmProvisioningPolicy);
 	}
 	
 	public DatacenterConfiguration getDatacenterConfiguration() {
@@ -61,8 +78,20 @@ public class Datacenter extends VirtEntity{
 			case DATACENTER_CONFIGURATION_REQUEST:
 				handle_DATACENTER_CONFIGURATION_REQUEST(event);
 				break;
+			case CREATE_VM_WITH_ACK:
+				handle_CREATE_VM_WITH_ACK(event);
+				break;
 		}
 		return false;
+	}
+
+	private void handle_CREATE_VM_WITH_ACK(VirtEvent event) {
+		VM vm = (VM) event.getData();
+		boolean result = false;
+		if(vmProvisioningPolicy.allocateHostToVM(vm, this)){
+			result = true;
+		}
+		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.ACK_CREATE_VM, 0.00, result);
 	}
 
 	private void handle_DATACENTER_CONFIGURATION_REQUEST(VirtEvent event) {
@@ -70,6 +99,8 @@ public class Datacenter extends VirtEntity{
 		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_RESPONSE, 0.0,  getDatacenterConfiguration());
 		
 	}
+	
+	
 	
 
 }

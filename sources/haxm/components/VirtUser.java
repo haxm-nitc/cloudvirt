@@ -14,7 +14,7 @@ public class VirtUser extends VirtEntity{
 	
 	private List<VM> vmList;
 	private List<VM> createdVMList;
-	private List<Task> taskList;
+	
 	private List<Integer> availableDatacenterIdList;
 	private List<Integer> selectedDatacenterIdList;
 	private List<DatacenterConfiguration> availableConfigurationsList;
@@ -24,7 +24,7 @@ public class VirtUser extends VirtEntity{
 		super(name);
 		vmList = new ArrayList<VM>();
 		createdVMList = new ArrayList<VM>();
-		taskList = new ArrayList<Task>();
+	
 		availableDatacenterIdList = new ArrayList<Integer>();
 		selectedDatacenterIdList = new ArrayList<Integer>();
 		availableConfigurationsList = new ArrayList<DatacenterConfiguration>();
@@ -76,17 +76,19 @@ public class VirtUser extends VirtEntity{
 	}
 
 	private void handle_ACK_CREATE_VM(VirtEvent event) {
-		int [] data = (int[]) event.getData();
-		boolean result = false;
-		int vmId = -1;
-		if(data[0] == 1){
-			result = true;
-			vmId = data[1];
+		boolean result = (boolean) event.getData();
+		if(result){
 			VM vm = getVmList().get(0);
 			getVmList().remove(vm);
 			getCreatedVMList().add(vm);
-			vm.setVmId(vmId);
 			vm.setDatacenterId(event.getSourceId());
+			String message = "VM Created with VMId:"+vm.getVmId()+" in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
+			CloudVirt.writeLog(null, message);
+			
+		}else{
+			String message = "VM Creation failed in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
+			CloudVirt.writeLog(null, message);
+			
 		}
 		createNextVm();		
 	}
@@ -115,7 +117,7 @@ public class VirtUser extends VirtEntity{
 			int datacenterId = userPolicy.selectDatacenterForVM(selectedDatacenterIdList, vm);
 			schedule(datacenterId, TagEnum.SEND, TagEnum.CREATE_VM_WITH_ACK, 0.00, vm);
 		}else{
-			
+			CloudVirt.writeLog(null, "No more VMs to create.");
 		}
 	}
 

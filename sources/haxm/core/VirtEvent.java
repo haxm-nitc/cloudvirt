@@ -31,7 +31,7 @@ public class VirtEvent implements Comparable<VirtEvent>{
 	}
 
 	private void initParams(int sourceId, int destinationId, TagEnum type, TagEnum tag, double time, Object data){
-		this.id = ++numEvents;	//A unique ID for each event
+		this.id = numEvents++;	//A unique ID for each event
 		this.sourceId = sourceId;
 		this.destinationId = destinationId;
 		this.type = type;
