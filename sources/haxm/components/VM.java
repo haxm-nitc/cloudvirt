@@ -2,15 +2,15 @@ package haxm.components;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import haxm.policies.TaskSchedulerPolicy;
 
 public class VM {
 	private static int numVms = 0; 
-	private int vmId;
+	private int id;
 	private int datacenterId;
 	private int userId;
 	private Host host;
+	private List<Task> taskList;
 	private long requestedMemory;
 	private double requestedBW;
 	private double allocatedBW;
@@ -26,24 +26,24 @@ public class VM {
 	public VM(int userId, long requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
-		this.setVmId(numVms++);
+		this.setId(numVms++);
 		this.userId = userId;
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
-		
+		taskList = new ArrayList<Task>();
 	}
 	/**
-	 * @return the vmId
+	 * @return the vm Id
 	 */
-	public int getVmId() {
-		return vmId;
+	public int getId() {
+		return id;
 	}
 	/**
-	 * @param vmId the vmId to set
+	 * @param id the vm Id to set
 	 */
-	public void setVmId(int vmId) {
-		this.vmId = vmId;
+	public void setId(int id) {
+		this.id = id;
 	}
 	/**
 	 * @return the datacenterId
@@ -140,5 +140,18 @@ public class VM {
 	 */
 	public void setTaskSchedulerPolicy(TaskSchedulerPolicy taskSchedulerPolicy) {
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
+	}
+
+	/**
+	 * @return the taskList
+	 */
+	public List<Task> getTaskList() {
+		return taskList;
+	}
+	/**
+	 * @param taskList the taskList to set
+	 */
+	public void setTaskList(List<Task> taskList) {
+		this.taskList = taskList;
 	}
 }

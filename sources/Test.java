@@ -1,17 +1,20 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import haxm.components.CPUTasklet;
+import haxm.components.DIOTasklet;
 import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
 import haxm.components.Host;
 import haxm.components.Storage;
+import haxm.components.Task;
+import haxm.components.Tasklet;
 import haxm.components.VM;
 import haxm.components.VMM;
 import haxm.components.VirtUser;
 import haxm.core.CloudVirt;
 import haxm.policies.TaskSchedulerPolicy;
 import haxm.policies.TaskSchedulerPolicySimple;
-import haxm.policies.VMProvisioningPolicy;
 import haxm.policies.VMProvisioningPolicySimple;
 import haxm.policies.VirtUserPolicySimple;
 
@@ -23,10 +26,26 @@ public class Test {
 		VirtUser virtUser = new VirtUser("virtUser1", new VirtUserPolicySimple()); 
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
+		
 		VM vm = new VM(virtUser.getId(), 1000, 500, taskSchedulerPolicy);
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm);
 		virtUser.setVmList(vmList);
+		
+		CPUTasklet cpuTasklet = new CPUTasklet(1000);
+		DIOTasklet diskTasklet = new DIOTasklet(200);
+		
+		List<Tasklet> taskletList = new ArrayList<Tasklet>();
+		taskletList.add(diskTasklet);
+		taskletList.add(cpuTasklet);
+		
+		Task task = new Task(taskletList);
+		task.setVmId(vm.getId());
+		task.setUserId(virtUser.getId());
+		
+		List<Task> taskList = new ArrayList<Task>();
+		taskList.add(task);
+		virtUser.setTaskList(taskList);
 		
 		CloudVirt.startSimulation();	
 		System.out.println("done");

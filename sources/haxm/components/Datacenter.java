@@ -1,5 +1,7 @@
 package haxm.components;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import haxm.VirtStateEnum;
@@ -14,43 +16,31 @@ public class Datacenter extends VirtEntity{
 	
 	private DatacenterConfiguration datacenterConfiguration;
 	
-	public VMProvisioningPolicy vmProvisioningPolicy;
+	private VMProvisioningPolicy vmProvisioningPolicy;
 	
-	/**
-	 * @return the vmProvisioningPolicy
-	 */
-	public VMProvisioningPolicy getVmProvisioningPolicy() {
-		return vmProvisioningPolicy;
-	}
-
-	/**
-	 * @param vmProvisioningPolicy the vmProvisioningPolicy to set
-	 */
-	public void setVmProvisioningPolicy(VMProvisioningPolicy vmProvisioningPolicy) {
-		this.vmProvisioningPolicy = vmProvisioningPolicy;
-	}
-
+	private List<VM> vmList;
+	private HashMap<Integer, VM> vmIdToVmMap;
+	
 	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration, VMProvisioningPolicy vmProvisioningPolicy) {
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
 		this.datacenterConfiguration.setDatacenterId(getId());
 		this.setVmProvisioningPolicy(vmProvisioningPolicy);
+		this.vmList = new ArrayList<VM>();
+		vmIdToVmMap = new HashMap<Integer, VM>();
+		
+		for(Host host : datacenterConfiguration.getHostList()){
+			host.setDatacenter(this);
+		}
+		
+		datacenterConfiguration.setDatacenterId(getId());
 	}
 	
-	public DatacenterConfiguration getDatacenterConfiguration() {
-		return datacenterConfiguration;
-	}
-	
-	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
-		this.datacenterConfiguration = datacenterConfiguration;
-		this.datacenterConfiguration.setDatacenterId(getId());
-	}
-
 	@Override
 	public boolean startEntity() {
 		this.currentState.setState(VirtStateEnum.RUNNING);
 		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
-		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.REGISTER_DATACENTER, 0.0, getId());
+		scheduleNow(CloudVirt.cloudRegistry.getId(), TagEnum.REGISTER_DATACENTER, getId());
 		return false;
 	}
 
@@ -81,8 +71,17 @@ public class Datacenter extends VirtEntity{
 			case CREATE_VM_WITH_ACK:
 				handle_CREATE_VM_WITH_ACK(event);
 				break;
+			case SUBMIT_TASK:
+				handle_SUBMIT_TASK(event);
+				break;
 		}
 		return false;
+	}
+
+	private void handle_SUBMIT_TASK(VirtEvent event) {		
+		Task task = (Task) event.getData();
+		VM vm = vmIdToVmMap.get(task.getVmId());
+		vm.getTaskList().add(task);
 	}
 
 	private void handle_CREATE_VM_WITH_ACK(VirtEvent event) {
@@ -90,16 +89,40 @@ public class Datacenter extends VirtEntity{
 		boolean result = false;
 		if(vmProvisioningPolicy.allocateHostToVM(vm, this)){
 			result = true;
+			vmList.add(vm);
+			vmIdToVmMap.put(vm.getId(), vm);
 		}
-		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.ACK_CREATE_VM, 0.00, result);
+		scheduleNow(event.getSourceId(), TagEnum.ACK_CREATE_VM, result);
 	}
 
 	private void handle_DATACENTER_CONFIGURATION_REQUEST(VirtEvent event) {
 		
-		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_RESPONSE, 0.0,  getDatacenterConfiguration());
+		scheduleNow(event.getSourceId(), TagEnum.DATACENTER_CONFIGURATION_RESPONSE,  getDatacenterConfiguration());
 		
 	}
+
+	/**
+	 * @return the vmProvisioningPolicy
+	 */
+	public VMProvisioningPolicy getVmProvisioningPolicy() {
+		return vmProvisioningPolicy;
+	}
+
+	/**
+	 * @param vmProvisioningPolicy the vmProvisioningPolicy to set
+	 */
+	public void setVmProvisioningPolicy(VMProvisioningPolicy vmProvisioningPolicy) {
+		this.vmProvisioningPolicy = vmProvisioningPolicy;
+	}
+
+	public DatacenterConfiguration getDatacenterConfiguration() {
+		return datacenterConfiguration;
+	}
 	
+	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
+		this.datacenterConfiguration = datacenterConfiguration;
+		this.datacenterConfiguration.setDatacenterId(getId());
+	}
 	
 	
 

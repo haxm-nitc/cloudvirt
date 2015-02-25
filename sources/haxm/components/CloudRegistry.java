@@ -57,7 +57,7 @@ public class CloudRegistry extends VirtEntity{
 	}
 
 	private void handle_DATACENTERS_INFO_REQUEST(VirtEvent event) {
-		schedule(event.getSourceId(), TagEnum.SEND, TagEnum.DATACENTERS_INFO_RESPONSE, 0.00, datacenterIdList);
+		scheduleNow(event.getSourceId(), TagEnum.DATACENTERS_INFO_RESPONSE, datacenterIdList);
 		
 	}
 

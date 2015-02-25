@@ -11,10 +11,9 @@ import haxm.core.VirtEvent;
 import haxm.policies.VirtUserPolicy;
 
 public class VirtUser extends VirtEntity{
-	
 	private List<VM> vmList;
 	private List<VM> createdVMList;
-	
+	private List<Task> taskList;
 	private List<Integer> availableDatacenterIdList;
 	private List<Integer> selectedDatacenterIdList;
 	private List<DatacenterConfiguration> availableConfigurationsList;
@@ -22,20 +21,20 @@ public class VirtUser extends VirtEntity{
 	
 	public VirtUser(String name, VirtUserPolicy policy){
 		super(name);
-		vmList = new ArrayList<VM>();
-		createdVMList = new ArrayList<VM>();
-	
-		availableDatacenterIdList = new ArrayList<Integer>();
-		selectedDatacenterIdList = new ArrayList<Integer>();
-		availableConfigurationsList = new ArrayList<DatacenterConfiguration>();
-		userPolicy = policy;
+		this.vmList = new ArrayList<VM>();
+		this.createdVMList = new ArrayList<VM>();
+		this.setTaskList(new ArrayList<Task>());
+		this.availableDatacenterIdList = new ArrayList<Integer>();
+		this.selectedDatacenterIdList = new ArrayList<Integer>();
+		this.availableConfigurationsList = new ArrayList<DatacenterConfiguration>();
+		this.userPolicy = policy;
 	}
 
 	@Override
 	public boolean startEntity() {
 		this.currentState.setState(VirtStateEnum.RUNNING);
 		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
-		schedule(CloudVirt.cloudRegistry.getId(), TagEnum.SEND, TagEnum.DATACENTERS_INFO_REQUEST, 0.0);
+		scheduleNow(CloudVirt.cloudRegistry.getId(), TagEnum.DATACENTERS_INFO_REQUEST);
 		return false;
 	}
 
@@ -82,9 +81,13 @@ public class VirtUser extends VirtEntity{
 			getVmList().remove(vm);
 			getCreatedVMList().add(vm);
 			vm.setDatacenterId(event.getSourceId());
-			String message = "VM Created with VMId:"+vm.getVmId()+" in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
+			String message = "VM Created with VMId:"+vm.getId()+" in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
 			CloudVirt.writeLog(null, message);
-			
+			for(Task task:taskList){
+				if(task.getVmId() == vm.getId()){
+					scheduleNow(event.getSourceId(), TagEnum.SUBMIT_TASK, task);
+				}	
+			}
 		}else{
 			String message = "VM Creation failed in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
 			CloudVirt.writeLog(null, message);
@@ -115,7 +118,7 @@ public class VirtUser extends VirtEntity{
 		if(getVmList().size() != 0){
 			VM vm = getVmList().get(0);
 			int datacenterId = userPolicy.selectDatacenterForVM(selectedDatacenterIdList, vm);
-			schedule(datacenterId, TagEnum.SEND, TagEnum.CREATE_VM_WITH_ACK, 0.00, vm);
+			scheduleNow(datacenterId, TagEnum.CREATE_VM_WITH_ACK, vm);
 		}else{
 			CloudVirt.writeLog(null, "No more VMs to create.");
 		}
@@ -125,7 +128,7 @@ public class VirtUser extends VirtEntity{
 		availableDatacenterIdList = (List<Integer>) event.getData();
 		//TO-DO send events to all dc
 		for(int destinationId : availableDatacenterIdList){
-			schedule(destinationId, TagEnum.SEND, TagEnum.DATACENTER_CONFIGURATION_REQUEST, 0.0);
+			scheduleNow(destinationId, TagEnum.DATACENTER_CONFIGURATION_REQUEST);
 		}
 	}
 
@@ -135,6 +138,13 @@ public class VirtUser extends VirtEntity{
 
 	public void setVmList(List<VM> vmList) {
 		this.vmList = vmList;
+	}
+	public List<Task> getTaskList() {
+		return taskList;
+	}
+
+	public void setTaskList(List<Task> taskList) {
+		this.taskList = taskList;
 	}
 
 }
