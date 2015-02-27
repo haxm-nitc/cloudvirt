@@ -1,11 +1,16 @@
 package haxm.components;
 
+import java.util.List;
+
 public class Host {
 	private VMM vmm;
 	private Storage storage;
 	private long memory;
 	private double bandwidth;
-	private Datacenter datacenter;
+	private CPU cpu;
+	//5 msec per kb
+	private double diskLatency;
+	private int datacenterId;
 	/**
 	 * @param vmm
 	 * @param storage
@@ -69,16 +74,16 @@ public class Host {
 		this.bandwidth = bandwidth;
 	}
 	/**
-	 * @return the datacenter
+	 * @return the datacenterId
 	 */
-	public Datacenter getDatacenter() {
-		return datacenter;
+	public int getDatacenterId() {
+		return datacenterId;
 	}
 	/**
-	 * @param datacenter the datacenter to set
+	 * @param datacenterId the datacenterId to set
 	 */
-	public void setDatacenter(Datacenter datacenter) {
-		this.datacenter = datacenter;
+	public void setDatacenterId(int datacenterId) {
+		this.datacenterId = datacenterId;
 	}
 	
 }

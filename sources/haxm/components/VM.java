@@ -11,23 +11,30 @@ public class VM {
 	private int userId;
 	private Host host;
 	private List<Task> taskList;
+	private int requestedCores;
+	private long requestedMipsPerCore;
 	private long requestedMemory;
 	private double requestedBW;
+	private int allocatedCores;
+	private long allocatedMipsPerCore;
 	private double allocatedBW;
 	private double allocatedMemory;
 	private TaskSchedulerPolicy taskSchedulerPolicy;
 	
 	/**
-	 * @param userId
+	 * @param requestedCores
+	 * @param requestedMipsPerCore
 	 * @param requestedMemory
 	 * @param requestedBW
 	 * @param taskSchedulerPolicy
 	 */
-	public VM(int userId, long requestedMemory, double requestedBW,
+	public VM(int requestedCores, long requestedMipsPerCore,
+			long requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
-		this.setId(numVms++);
-		this.userId = userId;
+		this.id = numVms++;
+		this.requestedCores = requestedCores;
+		this.requestedMipsPerCore = requestedMipsPerCore;
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;

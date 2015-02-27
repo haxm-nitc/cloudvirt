@@ -27,10 +27,10 @@ public class Test {
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
 		
-		VM vm = new VM(virtUser.getId(), 1000, 500, taskSchedulerPolicy);
+		VM vm = new VM(2, 3, 1000, 500, taskSchedulerPolicy);
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm);
-		virtUser.setVmList(vmList);
+		virtUser.submitVMs(vmList);
 		
 		CPUTasklet cpuTasklet = new CPUTasklet(1000);
 		DIOTasklet diskTasklet = new DIOTasklet(200);
@@ -45,7 +45,7 @@ public class Test {
 		
 		List<Task> taskList = new ArrayList<Task>();
 		taskList.add(task);
-		virtUser.setTaskList(taskList);
+		virtUser.submitTasks(taskList);
 		
 		CloudVirt.startSimulation();	
 		System.out.println("done");

@@ -30,7 +30,7 @@ public class Datacenter extends VirtEntity{
 		vmIdToVmMap = new HashMap<Integer, VM>();
 		
 		for(Host host : datacenterConfiguration.getHostList()){
-			host.setDatacenter(this);
+			host.setDatacenterId(getId());
 		}
 		
 		datacenterConfiguration.setDatacenterId(getId());

@@ -147,4 +147,13 @@ public class VirtUser extends VirtEntity{
 		this.taskList = taskList;
 	}
 
+	public void submitVMs(List<VM> vmList) {
+		this.getVmList().addAll(vmList);
+	}
+
+	public void submitTasks(List<Task> taskList) {
+		this.getTaskList().addAll(taskList);
+		
+	}
+
 }
