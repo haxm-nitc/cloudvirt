@@ -2,6 +2,9 @@ package haxm.components;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import haxm.policies.TaskSchedulerPolicy;
 
 public class VM {
@@ -20,6 +23,7 @@ public class VM {
 	private double allocatedBW;
 	private double allocatedMemory;
 	private TaskSchedulerPolicy taskSchedulerPolicy;
+	private double nextEventTime;
 	
 	/**
 	 * @param requestedCores
@@ -160,5 +164,21 @@ public class VM {
 	 */
 	public void setTaskList(List<Task> taskList) {
 		this.taskList = taskList;
+	}
+	/**
+	 * @return the nextEventTime
+	 */
+	public double getNextEventTime() {
+		return nextEventTime;
+	}
+	/**
+	 * @param nextEventTime the nextEventTime to set
+	 */
+	public void setNextEventTime(double nextEventTime) {
+		this.nextEventTime = nextEventTime;
+	}
+	public void executeTasks() {
+		setNextEventTime(getTaskSchedulerPolicy().runTasks());
+		
 	}
 }

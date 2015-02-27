@@ -62,18 +62,26 @@ public abstract class VirtEntity{
 		this.localQueue.addEvent(event);		
 	}
 	
-	public void schedule(int destinationId, TagEnum type, TagEnum tag, double time, Object data){
-		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, type, tag, time, data));
+	public void schedule(int destinationId, TagEnum type, TagEnum tag, double delay, Object data){
+		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, type, tag, CloudVirt.getCurrentTime() + delay, data));
 	}
 	
+	public void schedule(int destinationId, TagEnum tag, double delay, Object data){
+		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, TagEnum.SEND, tag, CloudVirt.getCurrentTime() + delay, data));
+	}
+
 	public void scheduleNow(int destinationId, TagEnum tag, Object data){
 		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, TagEnum.SEND, tag, CloudVirt.getCurrentTime(), data));
 	}
 
-	public void schedule(int destinationId, TagEnum type, TagEnum tag, double time){		
-		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, type, tag, time));
+	public void schedule(int destinationId, TagEnum type, TagEnum tag, double delay){		
+		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, type, tag, CloudVirt.getCurrentTime() + delay));
 	}
 	
+	public void schedule(int destinationId, TagEnum tag, double delay){		
+		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, TagEnum.SEND, tag, CloudVirt.getCurrentTime() + delay));
+	}
+
 	public void scheduleNow(int destinationId, TagEnum tag){		
 		addToGlobalQueue(new VirtEvent(this.getId(), destinationId, TagEnum.SEND, tag, CloudVirt.getCurrentTime()));
 	}

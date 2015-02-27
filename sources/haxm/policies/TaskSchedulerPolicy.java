@@ -1,5 +1,7 @@
 package haxm.policies;
 
-public interface TaskSchedulerPolicy {
+public abstract class TaskSchedulerPolicy {
+
+	public abstract double runTasks();
 
 }

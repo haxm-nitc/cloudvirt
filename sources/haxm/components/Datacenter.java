@@ -25,7 +25,10 @@ public class Datacenter extends VirtEntity{
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
 		this.datacenterConfiguration.setDatacenterId(getId());
+		
 		this.setVmProvisioningPolicy(vmProvisioningPolicy);
+		this.getVmProvisioningPolicy().setHostList(datacenterConfiguration.getHostList());
+		
 		this.vmList = new ArrayList<VM>();
 		vmIdToVmMap = new HashMap<Integer, VM>();
 		
@@ -74,8 +77,26 @@ public class Datacenter extends VirtEntity{
 			case SUBMIT_TASK:
 				handle_SUBMIT_TASK(event);
 				break;
+			case TASK_EXECUTION:
+				handle_TASK_EXECUTION();
+				break;
 		}
 		return false;
+	}
+
+	private void handle_TASK_EXECUTION() {
+		List<Host> hostList = getDatacenterConfiguration().getHostList();
+		double minTime = Double.MAX_VALUE;
+		double time;
+		for(Host host : hostList){
+			host.executeVMs();
+			time = host.getNextEventTime();
+			if(time < minTime){
+				minTime = time;
+			}
+		}
+		schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+		
 	}
 
 	private void handle_SUBMIT_TASK(VirtEvent event) {		

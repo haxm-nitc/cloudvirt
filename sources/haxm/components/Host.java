@@ -1,9 +1,11 @@
 package haxm.components;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Host {
 	private VMM vmm;
+	private List<VM> vmList;
 	private Storage storage;
 	private long memory;
 	private double bandwidth;
@@ -11,6 +13,7 @@ public class Host {
 	//5 msec per kb
 	private double diskLatency;
 	private int datacenterId;
+	private double nextEventTime;
 	/**
 	 * @param vmm
 	 * @param storage
@@ -24,6 +27,7 @@ public class Host {
 		this.storage = storage;
 		this.memory = memory;
 		this.bandwidth = bandwidth;
+		this.setVmList(new ArrayList<VM>());
 	}
 	/**
 	 * @return the vmm
@@ -84,6 +88,67 @@ public class Host {
 	 */
 	public void setDatacenterId(int datacenterId) {
 		this.datacenterId = datacenterId;
+	}
+	/**
+	 * @return the nextEventTime
+	 */
+	public double getNextEventTime() {
+		return nextEventTime;
+	}
+	/**
+	 * @param nextEventTime the nextEventTime to set
+	 */
+	public void setNextEventTime(double nextEventTime) {
+		this.nextEventTime = nextEventTime;
+	}
+	/**
+	 * @return the diskLatency
+	 */
+	public double getDiskLatency() {
+		return diskLatency;
+	}
+	/**
+	 * @param diskLatency the diskLatency to set
+	 */
+	public void setDiskLatency(double diskLatency) {
+		this.diskLatency = diskLatency;
+	}
+	/**
+	 * @return the cpu
+	 */
+	public CPU getCpu() {
+		return cpu;
+	}
+	/**
+	 * @param cpu the cpu to set
+	 */
+	public void setCpu(CPU cpu) {
+		this.cpu = cpu;
+	}
+	public void executeVMs() {
+		double minTime = Double.MAX_VALUE;
+		double time;
+		for(VM vm : getVmList()){
+			vm.executeTasks();
+			time = vm.getNextEventTime();
+			if(time < minTime){
+				minTime = time;
+			}
+		}
+		this.setNextEventTime(minTime);
+		
+	}
+	/**
+	 * @return the vmList
+	 */
+	public List<VM> getVmList() {
+		return vmList;
+	}
+	/**
+	 * @param vmList the vmList to set
+	 */
+	public void setVmList(List<VM> vmList) {
+		this.vmList = vmList;
 	}
 	
 }
