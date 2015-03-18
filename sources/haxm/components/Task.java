@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Task {
 	private List<Tasklet> taskletList;
+	//private TaskExecHistory taskExecHistory;
 	private int vmId;
 	private int userId;
 	private int datacenterId;
@@ -57,4 +58,15 @@ public class Task {
 	public void setDatacenterId(int datacenterId) {
 		this.datacenterId = datacenterId;
 	}
+
+	public void updateExecution(double duration) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double getRemainingTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

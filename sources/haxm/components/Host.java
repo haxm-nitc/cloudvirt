@@ -1,10 +1,19 @@
 package haxm.components;
 
+import haxm.VirtState;
+import haxm.VirtStateEnum;
+import haxm.policies.BWProvisioningPolicy;
+import haxm.policies.MemoryProvisioningPolicy;
+import haxm.policies.VMSchedulerpolicy;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Host {
-	private VMM vmm;
+	private VMSchedulerpolicy vmSchedulerPolicy;
+	private MemoryProvisioningPolicy memorySchedulerPolicy;
+	private BWProvisioningPolicy bwSchedulerPolicy;
+
 	private List<VM> vmList;
 	private Storage storage;
 	private long memory;
@@ -14,6 +23,8 @@ public class Host {
 	private double diskLatency;
 	private int datacenterId;
 	private double nextEventTime;
+	
+	private VirtState hostState;
 	/**
 	 * @param vmm
 	 * @param storage
@@ -21,26 +32,30 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(VMM vmm, Storage storage, long memory, double bandwidth) {
+	public Host(Storage storage, long memory, double bandwidth) {
 		super();
-		this.vmm = vmm;
 		this.storage = storage;
 		this.memory = memory;
 		this.bandwidth = bandwidth;
 		this.setVmList(new ArrayList<VM>());
+		hostState = new VirtState(VirtStateEnum.INVALID);
 	}
-	/**
-	 * @return the vmm
-	 */
-	public VMM getVmm() {
-		return vmm;
+
+	public void executeVMs() {
+		double minTime = Double.MAX_VALUE;
+		double time;
+		for(VM vm : getVmList()){
+			// TODO resources as arguments
+			vm.executeTasks();
+			time = vm.getNextEventTime();
+			if(time < minTime){
+				minTime = time;
+			}
+		}
+		this.setNextEventTime(minTime);
+		
 	}
-	/**
-	 * @param vmm the vmm to set
-	 */
-	public void setVmm(VMM vmm) {
-		this.vmm = vmm;
-	}
+
 	/**
 	 * @return the storage
 	 */
@@ -125,19 +140,6 @@ public class Host {
 	public void setCpu(CPU cpu) {
 		this.cpu = cpu;
 	}
-	public void executeVMs() {
-		double minTime = Double.MAX_VALUE;
-		double time;
-		for(VM vm : getVmList()){
-			vm.executeTasks();
-			time = vm.getNextEventTime();
-			if(time < minTime){
-				minTime = time;
-			}
-		}
-		this.setNextEventTime(minTime);
-		
-	}
 	/**
 	 * @return the vmList
 	 */
@@ -149,6 +151,46 @@ public class Host {
 	 */
 	public void setVmList(List<VM> vmList) {
 		this.vmList = vmList;
+	}
+	/**
+	 * @return the vmSchedulerPolicy
+	 */
+	public VMSchedulerpolicy getVmSchedulerPolicy() {
+		return vmSchedulerPolicy;
+	}
+	/**
+	 * @param vmSchedulerPolicy the vmSchedulerPolicy to set
+	 */
+	public void setVmSchedulerPolicy(VMSchedulerpolicy vmSchedulerPolicy) {
+		this.vmSchedulerPolicy = vmSchedulerPolicy;
+	}
+	/**
+	 * @return the memorySchedulerPolicy
+	 */
+	public MemoryProvisioningPolicy getMemorySchedulerPolicy() {
+		return memorySchedulerPolicy;
+	}
+	/**
+	 * @param memorySchedulerPolicy the memorySchedulerPolicy to set
+	 */
+	public void setMemorySchedulerPolicy(MemoryProvisioningPolicy memorySchedulerPolicy) {
+		this.memorySchedulerPolicy = memorySchedulerPolicy;
+	}
+	/**
+	 * @return the bwSchedulerPolicy
+	 */
+	public BWProvisioningPolicy getBwSchedulerPolicy() {
+		return bwSchedulerPolicy;
+	}
+	/**
+	 * @param bwSchedulerPolicy the bwSchedulerPolicy to set
+	 */
+	public void setBwSchedulerPolicy(BWProvisioningPolicy bwSchedulerPolicy) {
+		this.bwSchedulerPolicy = bwSchedulerPolicy;
+	}
+	public void addVM(VM vm) {
+		getVmList().add(vm);
+		getVmSchedulerPolicy().addVM(vm);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package haxm.components;
 
+import java.util.List;
+
 public class CPUTasklet extends Tasklet{
 	private long instructionLength;
 	

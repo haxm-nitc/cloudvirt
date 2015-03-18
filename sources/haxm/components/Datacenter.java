@@ -95,22 +95,27 @@ public class Datacenter extends VirtEntity{
 				minTime = time;
 			}
 		}
+		// TODO termination
 		schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+		
+		// TODO completion check
 		
 	}
 
 	private void handle_SUBMIT_TASK(VirtEvent event) {		
 		Task task = (Task) event.getData();
 		VM vm = vmIdToVmMap.get(task.getVmId());
-		vm.getTaskList().add(task);
+		vm.addTask(task);
 	}
 
 	private void handle_CREATE_VM_WITH_ACK(VirtEvent event) {
 		VM vm = (VM) event.getData();
 		boolean result = false;
-		if(vmProvisioningPolicy.allocateHostToVM(vm, this)){
+		Host host = vmProvisioningPolicy.allocateHostToVM(vm, this);
+		if(host != null){
 			result = true;
 			vmList.add(vm);
+			host.addVM(vm);
 			vmIdToVmMap.put(vm.getId(), vm);
 		}
 		scheduleNow(event.getSourceId(), TagEnum.ACK_CREATE_VM, result);

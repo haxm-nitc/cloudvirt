@@ -3,8 +3,8 @@ package haxm.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
+import haxm.VirtState;
+import haxm.VirtStateEnum;
 import haxm.policies.TaskSchedulerPolicy;
 
 public class VM {
@@ -25,6 +25,7 @@ public class VM {
 	private TaskSchedulerPolicy taskSchedulerPolicy;
 	private double nextEventTime;
 	
+	private VirtState vmState;
 	/**
 	 * @param requestedCores
 	 * @param requestedMipsPerCore
@@ -43,6 +44,18 @@ public class VM {
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
 		taskList = new ArrayList<Task>();
+		vmState = new VirtState(VirtStateEnum.INVALID);
+	}
+	public void executeTasks() {
+		if(vmState.getState() != VirtStateEnum.RUNNING){
+			vmState.setState(VirtStateEnum.RUNNING);
+			
+		}
+		setNextEventTime(getTaskSchedulerPolicy().runTasks());		
+	}
+	public void addTask(Task task) {
+		this.getTaskList().add(task);
+		this.getTaskSchedulerPolicy().addTask(task);
 	}
 	/**
 	 * @return the vm Id
@@ -177,8 +190,18 @@ public class VM {
 	public void setNextEventTime(double nextEventTime) {
 		this.nextEventTime = nextEventTime;
 	}
-	public void executeTasks() {
-		setNextEventTime(getTaskSchedulerPolicy().runTasks());
-		
+	
+	/**
+	 * @return the vmState
+	 */
+	public VirtState getVmState() {
+		return vmState;
 	}
+	/**
+	 * @param vmState the vmState to set
+	 */
+	public void setVmState(VirtState vmState) {
+		this.vmState = vmState;
+	}
+
 }
