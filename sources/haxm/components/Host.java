@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Host {
 	private VMSchedulerpolicy vmSchedulerPolicy;
-	private MemoryProvisioningPolicy memorySchedulerPolicy;
-	private BWProvisioningPolicy bwSchedulerPolicy;
+	private MemoryProvisioningPolicy memoryProvisioningPolicy;
+	private BWProvisioningPolicy bwProvisioningPolicy;
 
 	private List<VM> vmList;
 	private Storage storage;
@@ -165,32 +165,34 @@ public class Host {
 		this.vmSchedulerPolicy = vmSchedulerPolicy;
 	}
 	/**
-	 * @return the memorySchedulerPolicy
+	 * @return the memoryProvisioningPolicy
 	 */
-	public MemoryProvisioningPolicy getMemorySchedulerPolicy() {
-		return memorySchedulerPolicy;
+	public MemoryProvisioningPolicy getMemoryProvisioningPolicy() {
+		return memoryProvisioningPolicy;
 	}
 	/**
-	 * @param memorySchedulerPolicy the memorySchedulerPolicy to set
+	 * @param memoryProvisioningPolicy the memoryProvisioningPolicy to set
 	 */
-	public void setMemorySchedulerPolicy(MemoryProvisioningPolicy memorySchedulerPolicy) {
-		this.memorySchedulerPolicy = memorySchedulerPolicy;
+	public void setMemoryProvisioningPolicy(MemoryProvisioningPolicy memoryProvisioningPolicy) {
+		this.memoryProvisioningPolicy = memoryProvisioningPolicy;
 	}
 	/**
-	 * @return the bwSchedulerPolicy
+	 * @return the bwProvisioningPolicy
 	 */
-	public BWProvisioningPolicy getBwSchedulerPolicy() {
-		return bwSchedulerPolicy;
+	public BWProvisioningPolicy getBwProvisioningPolicy() {
+		return bwProvisioningPolicy;
 	}
 	/**
-	 * @param bwSchedulerPolicy the bwSchedulerPolicy to set
+	 * @param bwProvisioningPolicy the bwProvisioningPolicy to set
 	 */
-	public void setBwSchedulerPolicy(BWProvisioningPolicy bwSchedulerPolicy) {
-		this.bwSchedulerPolicy = bwSchedulerPolicy;
+	public void setBwProvisioningPolicy(BWProvisioningPolicy bwProvisioningPolicy) {
+		this.bwProvisioningPolicy = bwProvisioningPolicy;
 	}
 	public void addVM(VM vm) {
 		getVmList().add(vm);
 		getVmSchedulerPolicy().addVM(vm);
+		getBwProvisioningPolicy().addVM(vm);
+		getMemoryProvisioningPolicy().addVM(vm);
 	}
 	
 }
