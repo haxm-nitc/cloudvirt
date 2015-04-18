@@ -1,4 +1,5 @@
 package haxm.policies;
+import haxm.components.VM;
 import haxm.policies.MemoryProvisioningPolicy;
 
 public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy
@@ -15,4 +16,10 @@ public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy
         for(VM vm: getVmList())
             vm.setAllocatedMemory(Memorypervm);
 	 }
+
+	@Override
+	public long getAllocatedMemoryForVM(VM vm) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

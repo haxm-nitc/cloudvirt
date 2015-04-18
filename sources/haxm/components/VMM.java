@@ -2,11 +2,11 @@ package haxm.components;
 
 import haxm.policies.BWProvisioningPolicy;
 import haxm.policies.MemoryProvisioningPolicy;
-import haxm.policies.VMSchedulerpolicy;
+import haxm.policies.VMSchedulerPolicy;
 
 public class VMM {
 	String name;
-	private VMSchedulerpolicy vmSchedulerPolicy;
+	private VMSchedulerPolicy vmSchedulerPolicy;
 	private MemoryProvisioningPolicy memorySchedulerPolicy;
 	private BWProvisioningPolicy bwSchedulerPolicy;
 	
@@ -17,14 +17,14 @@ public class VMM {
 	/**
 	 * @return the vmSchedulerPolicy
 	 */
-	public VMSchedulerpolicy getVmSchedulerPolicy() {
+	public VMSchedulerPolicy getVmSchedulerPolicy() {
 		return vmSchedulerPolicy;
 	}
 
 	/**
 	 * @param vmSchedulerPolicy the vmSchedulerPolicy to set
 	 */
-	public void setVmSchedulerPolicy(VMSchedulerpolicy vmSchedulerPolicy) {
+	public void setVmSchedulerPolicy(VMSchedulerPolicy vmSchedulerPolicy) {
 		this.vmSchedulerPolicy = vmSchedulerPolicy;
 	}
 

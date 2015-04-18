@@ -2,11 +2,13 @@ package haxm.policies;
 
 import java.util.List;
 
+import haxm.components.CPU;
 import haxm.components.VM;
 
-public abstract class VMSchedulerpolicy {
+public abstract class VMSchedulerPolicy {
 
 	private List<VM> vmList;
+	private CPU cpu;
 	
 	public void addVM(VM vm){
 		getVmList().add(vm);
@@ -23,5 +25,8 @@ public abstract class VMSchedulerpolicy {
 	public void setVmList(List<VM> vmList) {
 		this.vmList = vmList;
 	};
+	
+	public abstract long getAllocatedMipsForVM(VM vm);
+	
 
 }

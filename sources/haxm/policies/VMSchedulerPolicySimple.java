@@ -1,6 +1,6 @@
 package haxm.policies;
 
-import haxm.policies.VMSchedulerPolicy;
+
 import haxm.components.VM;
 
 public class VMSchedulerPolicySimple extends VMSchedulerPolicy
@@ -20,10 +20,17 @@ public class VMSchedulerPolicySimple extends VMSchedulerPolicy
     {
     	return vmno;
     }
-
+/*
 	public VM getNextVM()
 	{
 		return getVmList().get(getvmno());
 		setvmno((getvmno()+1)%getVmList().size());
+	}
+*/
+
+	@Override
+	public long getAllocatedMipsForVM(VM vm) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

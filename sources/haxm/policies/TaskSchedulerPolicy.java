@@ -135,10 +135,7 @@ public abstract class TaskSchedulerPolicy {
 	public void setPreviousProcessedTime(double previousProcessedTime) {
 		this.previousProcessedTime = previousProcessedTime;
 	}
-	public double runTasks() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public abstract double runTasks(long mips, long memory, double bw, double diskLatency);
 
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub

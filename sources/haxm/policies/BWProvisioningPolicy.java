@@ -1,5 +1,9 @@
 package haxm.policies;
 
+import haxm.components.VM;
+
+import java.util.List;
+
 public abstract class BWProvisioningPolicy {
    
     private List<VM> vmList;
@@ -30,4 +34,5 @@ public abstract class BWProvisioningPolicy {
 	{
 		this.bw=a;
 	} 	
+	public abstract double getAllocatedBwForVM(VM vm);
 }

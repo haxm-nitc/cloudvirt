@@ -1,5 +1,7 @@
 package haxm.policies;
-import haxm.policies.VM;
+import java.util.List;
+
+import haxm.components.VM;
 
 public abstract class MemoryProvisioningPolicy {
     private List<VM> vmList;
@@ -30,4 +32,5 @@ public abstract class MemoryProvisioningPolicy {
 	{
 		this.memory=a;
 	}
+	public abstract long getAllocatedMemoryForVM(VM vm);
 }

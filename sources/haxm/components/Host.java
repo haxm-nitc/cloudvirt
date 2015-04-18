@@ -4,13 +4,13 @@ import haxm.VirtState;
 import haxm.VirtStateEnum;
 import haxm.policies.BWProvisioningPolicy;
 import haxm.policies.MemoryProvisioningPolicy;
-import haxm.policies.VMSchedulerpolicy;
+import haxm.policies.VMSchedulerPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Host {
-	private VMSchedulerpolicy vmSchedulerPolicy;
+	private VMSchedulerPolicy vmSchedulerPolicy;
 	private MemoryProvisioningPolicy memoryProvisioningPolicy;
 	private BWProvisioningPolicy bwProvisioningPolicy;
 
@@ -46,7 +46,9 @@ public class Host {
 		double time;
 		for(VM vm : getVmList()){
 			// TODO resources as arguments
-			vm.executeTasks();
+			vm.executeTasks(vmSchedulerPolicy.getAllocatedMipsForVM(vm), 
+					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
+					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
 			time = vm.getNextEventTime();
 			if(time < minTime){
 				minTime = time;
@@ -155,13 +157,13 @@ public class Host {
 	/**
 	 * @return the vmSchedulerPolicy
 	 */
-	public VMSchedulerpolicy getVmSchedulerPolicy() {
+	public VMSchedulerPolicy getVmSchedulerPolicy() {
 		return vmSchedulerPolicy;
 	}
 	/**
 	 * @param vmSchedulerPolicy the vmSchedulerPolicy to set
 	 */
-	public void setVmSchedulerPolicy(VMSchedulerpolicy vmSchedulerPolicy) {
+	public void setVmSchedulerPolicy(VMSchedulerPolicy vmSchedulerPolicy) {
 		this.vmSchedulerPolicy = vmSchedulerPolicy;
 	}
 	/**

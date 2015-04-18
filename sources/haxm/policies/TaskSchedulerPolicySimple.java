@@ -15,7 +15,10 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		
 	}
 	
-	public double runTasks() {
+
+	@Override
+	public double runTasks(long mips, long memory, double bw, double diskLatency) {
+		// TODO Auto-generated method stub
 		double currentTime = CloudVirt.getCurrentTime();
 		if(getPreviousProcessedTime() == Double.MAX_VALUE){
 			setPreviousProcessedTime(currentTime);
@@ -29,7 +32,6 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 				minTime = remainingTime;
 		}
 		return minTime;
-	
 	}
 	
 }

@@ -1,4 +1,5 @@
 package haxm.policies;
+import haxm.components.VM;
 import haxm.policies.BWProvisioningPolicy;
 
 public class BWProvisioningPolicySimple extends BWProvisioningPolicy
@@ -15,4 +16,10 @@ public class BWProvisioningPolicySimple extends BWProvisioningPolicy
         for(VM vm: getVmList())
             vm.setAllocatedBW(bwpervm);
 	 }
+
+	@Override
+	public double getAllocatedBwForVM(VM vm) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

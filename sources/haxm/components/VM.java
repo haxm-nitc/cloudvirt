@@ -46,12 +46,12 @@ public class VM {
 		taskList = new ArrayList<Task>();
 		vmState = new VirtState(VirtStateEnum.INVALID);
 	}
-	public void executeTasks() {
+	public void executeTasks(long mips, long memory, double bw, double diskLatency) {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
 			
 		}
-		setNextEventTime(getTaskSchedulerPolicy().runTasks());		
+		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
 	}
 	public void addTask(Task task) {
 		this.getTaskList().add(task);
