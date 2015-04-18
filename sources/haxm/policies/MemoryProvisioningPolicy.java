@@ -5,7 +5,7 @@ import haxm.components.VM;
 
 public abstract class MemoryProvisioningPolicy {
     private List<VM> vmList;
-    private long memory;            //memory of host
+    private long availableMemory;            //memory of host
 
     public void addVM(VM vm){
 		getVmList().add(vm);
@@ -23,14 +23,25 @@ public abstract class MemoryProvisioningPolicy {
 		this.vmList = vmList;
 	};
 
-	public long getMemory()
-	{
-		 return memory;
+	public abstract long getAllocatedMemoryForVM(VM vm);
+	
+	public abstract boolean canAllocateMemory(VM vm, long memory);
+	
+	public abstract void allocateMemory(VM vm, long memory);
+	
+	public abstract void deallocateMemory(VM vm);
+	/**
+	 * @return the availableMemory
+	 */
+	public long getAvailableMemory() {
+		return availableMemory;
+	}
+	/**
+	 * @param availableMemory the availableMemory to set
+	 */
+	public void setAvailableMemory(long availableMemory) {
+		this.availableMemory = availableMemory;
 	}
 
-	public void setMemory(long a)
-	{
-		this.memory=a;
-	}
-	public abstract long getAllocatedMemoryForVM(VM vm);
+
 }

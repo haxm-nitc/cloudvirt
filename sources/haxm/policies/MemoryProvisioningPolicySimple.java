@@ -1,25 +1,41 @@
 package haxm.policies;
+import java.util.HashMap;
+
 import haxm.components.VM;
 import haxm.policies.MemoryProvisioningPolicy;
 
-public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy
-{
+public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy{
 
-     MemoryProvisioningPolicySimple(long Memory)
-     {
-     	setMemory(Memory);
+	private HashMap<VM, Long> vmToMemoryMap;
+     public MemoryProvisioningPolicySimple(long Memory){
+     	setAvailableMemory(Memory);
+     	vmToMemoryMap = new HashMap<VM, Long>();
      }
 
-	 public void allocateMemorytoVMs(long Memory) //Memory of host
-	 {
-	 	long Memorypervm=Memory/getVmList().size();
-        for(VM vm: getVmList())
-            vm.setAllocatedMemory(Memorypervm);
-	 }
 
 	@Override
 	public long getAllocatedMemoryForVM(VM vm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return vmToMemoryMap.get(vm);
+	}
+
+	@Override
+	public boolean canAllocateMemory(VM vm, long memory) {
+		if(getAvailableMemory() < memory){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	@Override
+	public void allocateMemory(VM vm, long memory) {
+		vmToMemoryMap.put(vm, memory);
+		
+	}
+
+	@Override
+	public void deallocateMemory(VM vm) {
+		vmToMemoryMap.remove(vm);
+		
 	}
 }

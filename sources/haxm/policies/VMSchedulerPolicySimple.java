@@ -1,36 +1,51 @@
 package haxm.policies;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import haxm.components.VM;
 
-public class VMSchedulerPolicySimple extends VMSchedulerPolicy
-{
+public class VMSchedulerPolicySimple extends VMSchedulerPolicy{
 	private int vmno;
-
-	VMSchedulerPolicySimple()
-	{
+	private HashMap<VM, Long> vmToMipsMap;
+	
+	public VMSchedulerPolicySimple(long mips){
+		vmToMipsMap = new HashMap<VM, Long>();
+		vmList = new ArrayList<VM>();
+		setAvailableMips(mips);
 		vmno=0;
 	}
 
-    public void setvmno(int vmno)
-    {
+    public void setvmno(int vmno){
     	 this.vmno=vmno;
     }
-    public int getvmno()
-    {
+    public int getvmno(){
     	return vmno;
     }
-/*
-	public VM getNextVM()
-	{
-		return getVmList().get(getvmno());
-		setvmno((getvmno()+1)%getVmList().size());
-	}
-*/
 
 	@Override
-	public long getAllocatedMipsForVM(VM vm) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long getAllocatedMips(VM vm) {
+		return vmToMipsMap.get(vm);
+	}
+
+	@Override
+	public boolean canAllocateMips(VM vm, long mips) {
+		if(getAvailableMips() < mips){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	@Override
+	public void allocateMips(VM vm, long mips) {
+		vmToMipsMap.put(vm, mips);
+		setAvailableMips(getAvailableMips() - mips);
+	}
+
+	@Override
+	public void deallocateMips(VM vm) {
+		vmToMipsMap.remove(vm);
 	}
 }

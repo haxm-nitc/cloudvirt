@@ -14,12 +14,10 @@ public class VM {
 	private int userId;
 	private Host host;
 	private List<Task> taskList;
-	private int requestedCores;
-	private long requestedMipsPerCore;
+	private long requestedMips;
+	private long allocatedMips;
 	private long requestedMemory;
 	private double requestedBW;
-	private int allocatedCores;
-	private long allocatedMipsPerCore;
 	private double allocatedBW;
 	private double allocatedMemory;
 	private TaskSchedulerPolicy taskSchedulerPolicy;
@@ -33,13 +31,12 @@ public class VM {
 	 * @param requestedBW
 	 * @param taskSchedulerPolicy
 	 */
-	public VM(int requestedCores, long requestedMipsPerCore,
+	public VM(long requestedMips,
 			long requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
 		this.id = numVms++;
-		this.requestedCores = requestedCores;
-		this.requestedMipsPerCore = requestedMipsPerCore;
+		this.requestedMips = requestedMips;
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
@@ -202,6 +199,30 @@ public class VM {
 	 */
 	public void setVmState(VirtState vmState) {
 		this.vmState = vmState;
+	}
+	/**
+	 * @return the requestedMips
+	 */
+	public long getRequestedMips() {
+		return requestedMips;
+	}
+	/**
+	 * @param requestedMips the requestedMips to set
+	 */
+	public void setRequestedMips(long requestedMips) {
+		this.requestedMips = requestedMips;
+	}
+	/**
+	 * @return the allocatedMips
+	 */
+	public long getAllocatedMips() {
+		return allocatedMips;
+	}
+	/**
+	 * @param allocatedMips the allocatedMips to set
+	 */
+	public void setAllocatedMips(long allocatedMips) {
+		this.allocatedMips = allocatedMips;
 	}
 
 }

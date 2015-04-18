@@ -13,6 +13,7 @@ import haxm.policies.VirtUserPolicy;
 public class VirtUser extends VirtEntity{
 	private List<VM> vmList;
 	private List<VM> createdVMList;
+	private List<VM> failedVMList;
 	private List<Task> taskList;
 	private List<Integer> availableDatacenterIdList;
 	private List<Integer> selectedDatacenterIdList;
@@ -23,6 +24,7 @@ public class VirtUser extends VirtEntity{
 		super(name);
 		this.vmList = new ArrayList<VM>();
 		this.createdVMList = new ArrayList<VM>();
+		this.setFailedVMList(new ArrayList<VM>());
 		this.setTaskList(new ArrayList<Task>());
 		this.availableDatacenterIdList = new ArrayList<Integer>();
 		this.selectedDatacenterIdList = new ArrayList<Integer>();
@@ -76,9 +78,9 @@ public class VirtUser extends VirtEntity{
 
 	private void handle_ACK_CREATE_VM(VirtEvent event) {
 		boolean result = (boolean) event.getData();
+		VM vm = getVmList().get(0);
+		getVmList().remove(0);
 		if(result){
-			VM vm = getVmList().get(0);
-			getVmList().remove(vm);
 			getCreatedVMList().add(vm);
 			vm.setDatacenterId(event.getSourceId());
 			String message = "VM Created with VMId:"+vm.getId()+" in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
@@ -89,6 +91,7 @@ public class VirtUser extends VirtEntity{
 				}	
 			}
 		}else{
+			getFailedVMList().add(vm);
 			String message = "VM Creation failed in Datacenter:" + CloudVirt.entityHolder.getEntityNameByID(event.getSourceId())+",id:"+event.getSourceId();
 			CloudVirt.writeLog(null, message);
 			
@@ -154,6 +157,20 @@ public class VirtUser extends VirtEntity{
 	public void submitTasks(List<Task> taskList) {
 		this.getTaskList().addAll(taskList);
 		
+	}
+
+	/**
+	 * @return the failedVMList
+	 */
+	public List<VM> getFailedVMList() {
+		return failedVMList;
+	}
+
+	/**
+	 * @param failedVMList the failedVMList to set
+	 */
+	public void setFailedVMList(List<VM> failedVMList) {
+		this.failedVMList = failedVMList;
 	}
 
 }

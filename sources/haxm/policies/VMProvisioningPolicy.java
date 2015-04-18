@@ -8,6 +8,7 @@ import haxm.components.VM;
 
 public abstract class VMProvisioningPolicy {
 	private List<Host> hostList;
+	
 	public abstract Host allocateHostToVM(VM vm, Datacenter datacenter);
 	/**
 	 * @return the hostList

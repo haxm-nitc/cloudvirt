@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import haxm.components.CPU;
 import haxm.components.CPUTasklet;
+import haxm.components.Core;
 import haxm.components.DIOTasklet;
 import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
@@ -27,7 +29,7 @@ public class Test {
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
 		
-		VM vm = new VM(2, 3, 1000, 500, taskSchedulerPolicy);
+		VM vm = new VM(2, 1000, 500, taskSchedulerPolicy);
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm);
 		virtUser.submitVMs(vmList);
@@ -46,23 +48,36 @@ public class Test {
 		List<Task> taskList = new ArrayList<Task>();
 		taskList.add(task);
 		virtUser.submitTasks(taskList);
-		
+		System.out.println("Simulation started");
 		CloudVirt.startSimulation();	
-		System.out.println("done");
+		System.out.println("Simulation finished");
 		
 	}
 
 	private static Datacenter createDatacenter(String string) {
-		VMM vmm = new VMM("Xen");
+		Core core1 = new Core(1000);
+		
+		List<Core> cores = new ArrayList<Core>();
+		cores.add(core1);
+		
+
+		
 		Storage storage = null;
+		
+		long mips = 5;
 		double bw = 3000;
 		long memory = 8000;
-		Host host = new Host(vmm, storage, memory, bw);
+		
+		Host host = new Host(storage, mips, memory, bw);
+		
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);
+		
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
+		
 		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, 0, 0, 0);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
+		
 		return datacenter;
 	}
 }

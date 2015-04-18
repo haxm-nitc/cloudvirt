@@ -8,7 +8,11 @@ public class VMProvisioningPolicySimple extends VMProvisioningPolicy{
 
 	@Override
 	public Host allocateHostToVM(VM vm, Datacenter datacenter) {
-		
+		for(Host host : getHostList()){
+			if(host.createVM(vm)){
+				return host;
+			}
+		}
 		return null;
 	}
 

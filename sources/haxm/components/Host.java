@@ -2,9 +2,13 @@ package haxm.components;
 
 import haxm.VirtState;
 import haxm.VirtStateEnum;
+import haxm.core.CloudVirt;
 import haxm.policies.BWProvisioningPolicy;
+import haxm.policies.BWProvisioningPolicySimple;
 import haxm.policies.MemoryProvisioningPolicy;
+import haxm.policies.MemoryProvisioningPolicySimple;
 import haxm.policies.VMSchedulerPolicy;
+import haxm.policies.VMSchedulerPolicySimple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +22,7 @@ public class Host {
 	private Storage storage;
 	private long memory;
 	private double bandwidth;
-	private CPU cpu;
+	private long mips;
 	//5 msec per kb
 	private double diskLatency;
 	private int datacenterId;
@@ -32,21 +36,24 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(Storage storage, long memory, double bandwidth) {
+	public Host(Storage storage, long mips, long memory, double bandwidth) {
 		super();
 		this.storage = storage;
 		this.memory = memory;
 		this.bandwidth = bandwidth;
 		this.setVmList(new ArrayList<VM>());
 		hostState = new VirtState(VirtStateEnum.INVALID);
-	}
+		vmSchedulerPolicy = new VMSchedulerPolicySimple(mips);
+		bwProvisioningPolicy = new BWProvisioningPolicySimple(bandwidth);
+		memoryProvisioningPolicy = new MemoryProvisioningPolicySimple(memory);
+	}	
 
 	public void executeVMs() {
 		double minTime = Double.MAX_VALUE;
 		double time;
 		for(VM vm : getVmList()){
 			// TODO resources as arguments
-			vm.executeTasks(vmSchedulerPolicy.getAllocatedMipsForVM(vm), 
+			vm.executeTasks(vmSchedulerPolicy.getAllocatedMips(vm), 
 					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
 					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
 			time = vm.getNextEventTime();
@@ -131,18 +138,6 @@ public class Host {
 		this.diskLatency = diskLatency;
 	}
 	/**
-	 * @return the cpu
-	 */
-	public CPU getCpu() {
-		return cpu;
-	}
-	/**
-	 * @param cpu the cpu to set
-	 */
-	public void setCpu(CPU cpu) {
-		this.cpu = cpu;
-	}
-	/**
 	 * @return the vmList
 	 */
 	public List<VM> getVmList() {
@@ -193,8 +188,46 @@ public class Host {
 	public void addVM(VM vm) {
 		getVmList().add(vm);
 		getVmSchedulerPolicy().addVM(vm);
-		getBwProvisioningPolicy().addVM(vm);
-		getMemoryProvisioningPolicy().addVM(vm);
+	//	getBwProvisioningPolicy().addVM(vm);
+	//	getMemoryProvisioningPolicy().addVM(vm);
+	}
+
+	public boolean createVM(VM vm) {
+		boolean result = false;
+		
+		if(!bwProvisioningPolicy.canAllocateBW(vm, bandwidth)){
+			CloudVirt.mainLog.append("VM Creation failed - inadequate Bandwidth");
+			return result;
+		}
+		if(!memoryProvisioningPolicy.canAllocateMemory(vm, memory)){
+			CloudVirt.mainLog.append("VM Creation failed - inadequate Memory");
+			return result;
+		}
+		if(!vmSchedulerPolicy.canAllocateMips(vm, mips)){
+			CloudVirt.mainLog.append("VM Creation failed - inadequate mips");
+			return result;
+		}
+		
+		result = true;
+		bwProvisioningPolicy.allocateBW(vm, bandwidth);
+		memoryProvisioningPolicy.allocateMemory(vm, memory);
+		vmSchedulerPolicy.allocateMips(vm, mips);
+		
+		return result;
+	}
+
+	/**
+	 * @return the mips
+	 */
+	public long getMips() {
+		return mips;
+	}
+
+	/**
+	 * @param mips the mips to set
+	 */
+	public void setMips(long mips) {
+		this.mips = mips;
 	}
 	
 }
