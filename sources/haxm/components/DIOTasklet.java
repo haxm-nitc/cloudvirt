@@ -1,30 +1,56 @@
 package haxm.components;
 
 public class DIOTasklet extends Tasklet {
-	private long diskIO;
+	private long data;
+	private long remainingData;
 
-	public DIOTasklet(long diskIO){
+	public DIOTasklet(long data){
 		this.setTaskletType(DISKIO);
-		this.setDiskIO(diskIO);
+		this.setData(data);
+		this.setRemainingData(data);
 	}
 
-	
+
+
+
+	public long getRemainingData() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
 	/**
-	 * @return the diskIO
+	 * @return the data
 	 */
-	public long getDiskIO() {
-		return diskIO;
+	public long getData() {
+		return data;
 	}
+
+
 
 	/**
-	 * @param diskIO the diskIO to set
+	 * @param data the data to set
 	 */
-	public void setDiskIO(long diskIO) {
-		this.diskIO = diskIO;
+	public void setData(long data) {
+		this.data = data;
 	}
 
-	
-	public double calculateTime(double diskLatency){
-		return diskLatency*this.getDiskIO();
+
+
+	/**
+	 * @param remainingData the remainingData to set
+	 */
+	public void setRemainingData(long remainingData) {
+		this.remainingData = remainingData;
+	}
+
+
+
+	@Override
+	public double calculateRemainingTime(long mips, long memory, double bw,
+			double diskLatency) {
+		// TODO Auto-generated method stub
+		return getRemainingData()/diskLatency;
 	}
 }

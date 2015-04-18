@@ -4,6 +4,7 @@ import java.util.List;
 
 public class CPUTasklet extends Tasklet{
 	private long instructionLength;
+	private long remainingInstructionLength;
 	
 	public CPUTasklet(long instructionLength){
 		this.setTaskletType(CPU);
@@ -15,9 +16,23 @@ public class CPUTasklet extends Tasklet{
 	public void setInstructionLength(long instructionLength) {
 		this.instructionLength = instructionLength;
 	}
+	/**
+	 * @return the remainingInstructionLength
+	 */
+	public long getRemainingInstructionLength() {
+		return remainingInstructionLength;
+	}
+	/**
+	 * @param remainingInstructionLength the remainingInstructionLength to set
+	 */
+	public void setRemainingInstructionLength(long remainingInstructionLength) {
+		this.remainingInstructionLength = remainingInstructionLength;
+	}
 	@Override
-	public double calculateTime(double mips) {
-		return instructionLength/mips;
+	public double calculateRemainingTime(long mips, long memory, double bw,
+			double diskLatency) {
+		// TODO Auto-generated method stub
+		return getRemainingInstructionLength()/mips;
 	}
 	
 

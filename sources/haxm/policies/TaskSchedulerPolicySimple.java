@@ -24,9 +24,10 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 			setPreviousProcessedTime(currentTime);
 		}
 		List<Task> taskList = getRunningTaskList();
+		int numTasks = taskList.size();
 		double minTime = Double.MAX_VALUE;
 		for(Task task : taskList){
-			task.updateExecution(currentTime - getPreviousProcessedTime());
+			task.updateExecution(currentTime - getPreviousProcessedTime(), mips/numTasks, memory/numTasks, bw/numTasks, diskLatency/numTasks);
 			double remainingTime = task.getRemainingTime();
 			if(minTime>remainingTime)
 				minTime = remainingTime;

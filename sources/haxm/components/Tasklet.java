@@ -14,7 +14,7 @@ public abstract class Tasklet {
 		this.taskletType = taskletType;
 	}
 	
-	public abstract double calculateTime(double l);
+	public abstract double calculateRemainingTime(long mips, long memory, double bw, double diskLatency);
 	
 
 }
