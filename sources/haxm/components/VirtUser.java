@@ -8,7 +8,10 @@ import haxm.core.CloudVirt;
 import haxm.core.TagEnum;
 import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
+import haxm.policies.PricingPolicy;
 import haxm.policies.VirtUserPolicy;
+
+
 
 public class VirtUser extends VirtEntity{
 	private List<VM> vmList;
@@ -19,6 +22,7 @@ public class VirtUser extends VirtEntity{
 	private List<Integer> selectedDatacenterIdList;
 	private List<DatacenterConfiguration> availableConfigurationsList;
 	private VirtUserPolicy userPolicy;
+	private PricingPolicy  pricingPolicy;
 	
 	public VirtUser(String name, VirtUserPolicy policy){
 		super(name);
@@ -171,6 +175,14 @@ public class VirtUser extends VirtEntity{
 	 */
 	public void setFailedVMList(List<VM> failedVMList) {
 		this.failedVMList = failedVMList;
+	}
+
+	public PricingPolicy getPricingPolicy() {
+		return pricingPolicy;
+	}
+
+	public void setPricingPolicy(PricingPolicy pricingPolicy) {
+		this.pricingPolicy = pricingPolicy;
 	}
 
 }
