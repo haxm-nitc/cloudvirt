@@ -34,6 +34,7 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		for(Task task : taskList){
 			task.updateExecution(currentTime - getPreviousProcessedTime(), mips/numTasks, memory/numTasks, bw/numTasks, diskLatency/numTasks);
 			double remainingTime = task.getRemainingTime();
+			CloudVirt.mainLog.append("[TSPolicy runTasks]task user id:"+task.getUserId()+" and datacenter id :"+task.getDatacenterId()+" remaining time:"+remainingTime);
 			if(remainingTime == 0){
 				removeList.add(task);
 				minTime = Double.MAX_VALUE;

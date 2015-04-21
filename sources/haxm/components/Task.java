@@ -82,12 +82,12 @@ public class Task {
 			case Tasklet.CPU:
 				CPUTasklet cpuTasklet = (CPUTasklet) tasklet;
 				long remInstr = cpuTasklet.getRemainingInstructionLength();
-				if(remInstr < duration * mips){
+				if(remInstr < duration * mips * 1000000){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
-					updateExecution(duration - remInstr/mips, mips, memory, bw, diskLatency);
+					updateExecution(duration - remInstr/(mips*1000000), mips, memory, bw, diskLatency);
 				}else{
-					cpuTasklet.setRemainingInstructionLength((long) (remInstr - duration*mips));
+					cpuTasklet.setRemainingInstructionLength((long) (remInstr - duration*mips*1000000));
 					setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
 				}
 				break;

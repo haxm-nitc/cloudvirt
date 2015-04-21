@@ -15,7 +15,7 @@ public class DIOTasklet extends Tasklet {
 
 	public long getRemainingData() {
 		// TODO Auto-generated method stub
-		return 0;
+		return remainingData;
 	}
 
 

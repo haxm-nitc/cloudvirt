@@ -1,5 +1,11 @@
 package haxm.core;
-
+/*
+ * time - 1 second
+ * bw   - mega Bytes per second
+ * disklatency - mega Bytes per second
+ * data -  mega bytes
+ * 
+ * */
 import haxm.LogFile;
 import haxm.VirtState;
 import haxm.VirtStateEnum;

@@ -1,3 +1,4 @@
+package examples;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import haxm.policies.TaskSchedulerPolicySimple;
 import haxm.policies.VMProvisioningPolicySimple;
 import haxm.policies.VirtUserPolicySimple;
 
-public class Test {
+public class Example1 {
 
 	public static void main(String[] args) {
 		CloudVirt.initSimulationEnvironment();
@@ -31,13 +32,14 @@ public class Test {
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
 		
-		VM vm = new VM(2, 1000, 500, taskSchedulerPolicy);
+		//(mips,memory,bw,policy)
+		VM vm = new VM(2, 1000, 10, taskSchedulerPolicy);
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm);
 		virtUser.submitVMs(vmList);
 		
-		CPUTasklet cpuTasklet = new CPUTasklet(1000);
-		DIOTasklet diskTasklet = new DIOTasklet(200);
+		CPUTasklet cpuTasklet = new CPUTasklet(10000000);
+		DIOTasklet diskTasklet = new DIOTasklet(500);
 		
 		List<Tasklet> taskletList = new ArrayList<Tasklet>();
 		taskletList.add(diskTasklet);
@@ -61,9 +63,9 @@ public class Test {
 		Storage storage = null;
 		
 		long mips = 5;
-		double bw = 3000;
+		double bw = 100; //mbps
 		long memory = 8000;
-		double disklatency=2.5;
+		double disklatency=10;
 		
 		Host host = new Host(storage, mips, memory, bw,disklatency);
 		

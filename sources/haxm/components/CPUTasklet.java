@@ -33,7 +33,7 @@ public class CPUTasklet extends Tasklet{
 	public double calculateRemainingTime(long mips, long memory, double bw,
 			double diskLatency) {
 		// TODO Auto-generated method stub
-		return getRemainingInstructionLength()/mips;
+		return getRemainingInstructionLength()/(mips*1000000);
 	}
 	
 
