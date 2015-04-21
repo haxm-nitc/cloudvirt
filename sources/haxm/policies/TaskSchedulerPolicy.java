@@ -1,6 +1,7 @@
 package haxm.policies;
 
 import haxm.components.Task;
+import haxm.components.VM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,9 @@ public abstract class TaskSchedulerPolicy {
 	protected List<Task> runningTaskList;
 	protected List<Task> finishedTaskList;
 	private List<Task> failedTaskList;
-	private int allocatedCores;
-	private long allocatedMipsPerCore;
 	private double allocatedBW;
 	private double allocatedMemory;
-	
+	private VM vm;
 	private double previousProcessedTime;
 
 	
@@ -24,6 +23,12 @@ public abstract class TaskSchedulerPolicy {
 		finishedTaskList = new ArrayList<Task>();
 		failedTaskList = new ArrayList<Task>();
 		previousProcessedTime = 0;
+	}
+	public VM getVm() {
+		return vm;
+	}
+	public void setVm(VM vm) {
+		this.vm = vm;
 	}
 	public void submitTasks(List<Task> taskList) {
 		// TODO Auto-generated method stub
@@ -66,30 +71,6 @@ public abstract class TaskSchedulerPolicy {
 	 */
 	public void setFailedTaskList(List<Task> failedTaskList) {
 		this.failedTaskList = failedTaskList;
-	}
-	/**
-	 * @return the allocatedCores
-	 */
-	public int getAllocatedCores() {
-		return allocatedCores;
-	}
-	/**
-	 * @param allocatedCores the allocatedCores to set
-	 */
-	public void setAllocatedCores(int allocatedCores) {
-		this.allocatedCores = allocatedCores;
-	}
-	/**
-	 * @return the allocatedMipsPerCore
-	 */
-	public long getAllocatedMipsPerCore() {
-		return allocatedMipsPerCore;
-	}
-	/**
-	 * @param allocatedMipsPerCore the allocatedMipsPerCore to set
-	 */
-	public void setAllocatedMipsPerCore(long allocatedMipsPerCore) {
-		this.allocatedMipsPerCore = allocatedMipsPerCore;
 	}
 	/**
 	 * @return the allocatedBW

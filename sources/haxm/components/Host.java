@@ -58,10 +58,15 @@ public class Host {
 			vm.executeTasks(vmSchedulerPolicy.getAllocatedMips(vm), 
 					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
 					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
-			time = vm.getNextEventTime();
-			if(time < minTime){
-				minTime = time;
-			}
+			if(vm.getVmState().getState()==VirtStateEnum.FINISHED){
+				getVmSchedulerPolicy().deallocateMips(vm);
+			}else{	
+	
+				time = vm.getNextEventTime();
+				if(time < minTime){
+					minTime = time;
+				}
+			}	
 		}
 		this.setNextEventTime(minTime);
 		

@@ -41,6 +41,7 @@ public class VM {
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
+		this.taskSchedulerPolicy.setVm(this);
 		taskList = new ArrayList<Task>();
 		setFinishedTaskList(new ArrayList<Task>());
 		vmState = new VirtState(VirtStateEnum.INVALID);
@@ -49,7 +50,6 @@ public class VM {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
 			getTaskSchedulerPolicy().submitTasks(taskList);
-			
 		}
 		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
 	}

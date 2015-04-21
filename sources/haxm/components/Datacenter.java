@@ -111,6 +111,7 @@ public class Datacenter extends VirtEntity{
 		}
 		// TODO termination
 		if(minTime == Double.MAX_VALUE){
+			CloudVirt.mainLog.append("[DC TE] Every VM is finished in the datacenter with ID - " + getId());
 			return;
 		}else{
 			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);

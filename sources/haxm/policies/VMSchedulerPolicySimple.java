@@ -47,5 +47,6 @@ public class VMSchedulerPolicySimple extends VMSchedulerPolicy{
 	@Override
 	public void deallocateMips(VM vm) {
 		vmToMipsMap.remove(vm);
+		setAvailableMips(getAvailableMips() + vm.getAllocatedMips());
 	}
 }
