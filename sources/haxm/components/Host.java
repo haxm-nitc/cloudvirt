@@ -36,11 +36,13 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(Storage storage, long mips, long memory, double bandwidth) {
+	public Host(Storage storage, long mips, long memory, double bandwidth,double disklatency) {
 		super();
+		this.diskLatency=disklatency;
 		this.storage = storage;
 		this.memory = memory;
 		this.bandwidth = bandwidth;
+		this.mips = mips;
 		this.setVmList(new ArrayList<VM>());
 		hostState = new VirtState(VirtStateEnum.INVALID);
 		vmSchedulerPolicy = new VMSchedulerPolicySimple(mips);
@@ -195,20 +197,20 @@ public class Host {
 	public boolean createVM(VM vm) {
 		boolean result = false;
 		
-		if(!bwProvisioningPolicy.canAllocateBW(vm, bandwidth)){
+		if(!bwProvisioningPolicy.canAllocateBW(vm, vm.getRequestedBW())){
 			return result;
 		}
-		if(!memoryProvisioningPolicy.canAllocateMemory(vm, memory)){
+		if(!memoryProvisioningPolicy.canAllocateMemory(vm, vm.getRequestedMemory())){
 			return result;
 		}
-		if(!vmSchedulerPolicy.canAllocateMips(vm, mips)){
+		if(!vmSchedulerPolicy.canAllocateMips(vm, vm.getRequestedMips())){
 			return result;
 		}
 		
 		result = true;
-		bwProvisioningPolicy.allocateBW(vm, bandwidth);
-		memoryProvisioningPolicy.allocateMemory(vm, memory);
-		vmSchedulerPolicy.allocateMips(vm, mips);
+		bwProvisioningPolicy.allocateBW(vm, vm.getRequestedBW());
+		memoryProvisioningPolicy.allocateMemory(vm, vm.getRequestedMemory());
+		vmSchedulerPolicy.allocateMips(vm, vm.getRequestedMips());
 		
 		return result;
 	}

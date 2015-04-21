@@ -23,7 +23,7 @@ public abstract class VirtEntity{
 	
 	public VirtEntity(String name){
 		this.name = name;
-		this.id = numEntities++;
+		this.id = ++numEntities;
 		currentState = new VirtState(VirtStateEnum.INVALID);
 		localQueue = new EventQueue();
 		CloudVirt.addEntity(this);

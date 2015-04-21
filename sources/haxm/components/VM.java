@@ -36,7 +36,7 @@ public class VM {
 			long requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
-		this.id = numVms++;
+		this.id = ++numVms;
 		this.requestedMips = requestedMips;
 		this.requestedMemory = requestedMemory;
 		this.requestedBW = requestedBW;

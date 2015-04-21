@@ -9,6 +9,7 @@ public class CPUTasklet extends Tasklet{
 	public CPUTasklet(long instructionLength){
 		this.setTaskletType(CPU);
 		this.setInstructionLength(instructionLength);
+		this.setRemainingInstructionLength(instructionLength);
 	}
 	public long getInstructionLength() {
 		return instructionLength;

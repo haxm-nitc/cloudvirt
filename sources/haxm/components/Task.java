@@ -2,6 +2,7 @@ package haxm.components;
 
 import haxm.VirtState;
 import haxm.VirtStateEnum;
+import haxm.core.CloudVirt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,14 @@ import java.util.List;
 public class Task {
 	private List<Tasklet> taskletList;
 	private List<Tasklet> finishedTaskletList;
+	public List<Tasklet> getFinishedTaskletList() {
+		return finishedTaskletList;
+	}
+
+	public void setFinishedTaskletList(List<Tasklet> finishedTaskletList) {
+		this.finishedTaskletList = finishedTaskletList;
+	}
+
 	private double remainingTime;
 	private VM vm;
 	private int userId;
@@ -16,14 +25,11 @@ public class Task {
 	private VirtState taskState;
 	
 
-	public Task(){
-		taskletList = new ArrayList<Tasklet>();
-		finishedTaskletList = new ArrayList<Tasklet>();
-		taskState = new VirtState(VirtStateEnum.INVALID);
-	}
 
 	public Task(List<Tasklet> taskletlist){
 		this.setTaskletList(taskletlist);
+		finishedTaskletList = new ArrayList<Tasklet>();
+		taskState = new VirtState(VirtStateEnum.INVALID);
 		
 	}
 	
@@ -59,9 +65,13 @@ public class Task {
 	}
 
 	public void updateExecution(double duration, long mips, long memory, double bw, double diskLatency) {
+		CloudVirt.mainLog.append("[Task UE] mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration
+				+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
+		
 		if(taskState.getState() == VirtStateEnum.INVALID){
 			taskState.setState(VirtStateEnum.RUNNING);
 		}
+		
 		// TODO Auto-generated method stub
 		if(taskletList.size() == 0){
 			setRemainingTime(0);

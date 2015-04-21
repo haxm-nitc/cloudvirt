@@ -137,7 +137,8 @@ public class Datacenter extends VirtEntity{
 	private void handle_SUBMIT_TASK(VirtEvent event) {		
 		Task task = (Task) event.getData();
 		VM vm = task.getVm();
-		vm.addTask(task);		
+		vm.addTask(task);	
+		task.setDatacenterId(getId());
 		if(!executing){
 			executing = true;
 			scheduleNow(getId(), TagEnum.TASK_EXECUTION);

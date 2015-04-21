@@ -63,8 +63,9 @@ public class Test {
 		long mips = 5;
 		double bw = 3000;
 		long memory = 8000;
+		double disklatency=2.5;
 		
-		Host host = new Host(storage, mips, memory, bw);
+		Host host = new Host(storage, mips, memory, bw,disklatency);
 		
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);

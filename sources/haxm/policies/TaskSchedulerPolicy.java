@@ -23,7 +23,7 @@ public abstract class TaskSchedulerPolicy {
 		runningTaskList = new ArrayList<Task>();
 		finishedTaskList = new ArrayList<Task>();
 		failedTaskList = new ArrayList<Task>();
-		previousProcessedTime = Double.MAX_VALUE;
+		previousProcessedTime = 0;
 	}
 	public void submitTasks(List<Task> taskList) {
 		// TODO Auto-generated method stub
