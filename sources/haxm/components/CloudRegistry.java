@@ -15,6 +15,20 @@ public class CloudRegistry extends VirtEntity{
 	//private List<Datacenter> datacenterList;
 	private List<Integer> datacenterIdList;
 	
+	/**
+	 * @return the datacenterIdList
+	 */
+	public List<Integer> getDatacenterIdList() {
+		return datacenterIdList;
+	}
+
+	/**
+	 * @param datacenterIdList the datacenterIdList to set
+	 */
+	public void setDatacenterIdList(List<Integer> datacenterIdList) {
+		this.datacenterIdList = datacenterIdList;
+	}
+
 	public CloudRegistry(String name) {
 		super(name);
 		datacenterIdList = new ArrayList<Integer>();

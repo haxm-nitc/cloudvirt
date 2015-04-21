@@ -1,18 +1,25 @@
 package haxm.components;
 
+import haxm.VirtState;
+import haxm.VirtStateEnum;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
 	private List<Tasklet> taskletList;
+	private List<Tasklet> finishedTaskletList;
 	private double remainingTime;
-	//private TaskExecHistory taskExecHistory;
-	private int vmId;
+	private VM vm;
 	private int userId;
 	private int datacenterId;
+	private VirtState taskState;
+	
 
 	public Task(){
 		taskletList = new ArrayList<Tasklet>();
+		finishedTaskletList = new ArrayList<Tasklet>();
+		taskState = new VirtState(VirtStateEnum.INVALID);
 	}
 
 	public Task(List<Tasklet> taskletlist){
@@ -35,15 +42,6 @@ public class Task {
 	public void addAllTasklets(List<Tasklet> tasklets){
 		this.getTaskletList().addAll(tasklets);
 	}
-
-	public int getVmId() {
-		return vmId;
-	}
-
-	public void setVmId(int vmId) {
-		this.vmId = vmId;
-	}
-
 	public int getUserId() {
 		return userId;
 	}
@@ -61,9 +59,13 @@ public class Task {
 	}
 
 	public void updateExecution(double duration, long mips, long memory, double bw, double diskLatency) {
+		if(taskState.getState() == VirtStateEnum.INVALID){
+			taskState.setState(VirtStateEnum.RUNNING);
+		}
 		// TODO Auto-generated method stub
 		if(taskletList.size() == 0){
 			setRemainingTime(0);
+			taskState.setState(VirtStateEnum.FINISHED);
 		}
 		Tasklet tasklet = taskletList.get(0);
 		switch(tasklet.getTaskletType()){
@@ -72,6 +74,7 @@ public class Task {
 				long remInstr = cpuTasklet.getRemainingInstructionLength();
 				if(remInstr < duration * mips){
 					taskletList.remove(0);
+					finishedTaskletList.add(tasklet);
 					updateExecution(duration - remInstr/mips, mips, memory, bw, diskLatency);
 				}else{
 					cpuTasklet.setRemainingInstructionLength((long) (remInstr - duration*mips));
@@ -83,6 +86,7 @@ public class Task {
 				long remainingDIOData = dioTasklet.getRemainingData();
 				if(remainingDIOData < duration * diskLatency){
 					taskletList.remove(0);
+					finishedTaskletList.add(tasklet);
 					updateExecution(duration - remainingDIOData/diskLatency, mips, memory, bw, diskLatency);
 				}else{
 					dioTasklet.setRemainingData((long) (remainingDIOData - duration*diskLatency));
@@ -94,6 +98,7 @@ public class Task {
 				long remainingNIOData = nioTasklet.getRemainingData();
 				if(remainingNIOData < duration * diskLatency){
 					taskletList.remove(0);
+					finishedTaskletList.add(tasklet);
 					updateExecution(duration - remainingNIOData/bw, mips, memory, bw, diskLatency);
 				}else{
 					nioTasklet.setRemainingData((long) (remainingNIOData - duration*diskLatency));
@@ -128,6 +133,20 @@ public class Task {
 	public double getRemainingTime() {
 		// TODO Auto-generated method stub
 		return remainingTime;
+	}
+
+	/**
+	 * @return the vm
+	 */
+	public VM getVm() {
+		return vm;
+	}
+
+	/**
+	 * @param vm the vm to set
+	 */
+	public void setVm(VM vm) {
+		this.vm = vm;
 	}
 
 }

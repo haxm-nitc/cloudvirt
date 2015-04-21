@@ -196,15 +196,12 @@ public class Host {
 		boolean result = false;
 		
 		if(!bwProvisioningPolicy.canAllocateBW(vm, bandwidth)){
-			CloudVirt.mainLog.append("VM Creation failed - inadequate Bandwidth");
 			return result;
 		}
 		if(!memoryProvisioningPolicy.canAllocateMemory(vm, memory)){
-			CloudVirt.mainLog.append("VM Creation failed - inadequate Memory");
 			return result;
 		}
 		if(!vmSchedulerPolicy.canAllocateMips(vm, mips)){
-			CloudVirt.mainLog.append("VM Creation failed - inadequate mips");
 			return result;
 		}
 		

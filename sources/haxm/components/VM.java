@@ -14,6 +14,7 @@ public class VM {
 	private int userId;
 	private Host host;
 	private List<Task> taskList;
+	private List<Task> finishedTaskList;
 	private long requestedMips;
 	private long allocatedMips;
 	private long requestedMemory;
@@ -41,11 +42,13 @@ public class VM {
 		this.requestedBW = requestedBW;
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
 		taskList = new ArrayList<Task>();
+		setFinishedTaskList(new ArrayList<Task>());
 		vmState = new VirtState(VirtStateEnum.INVALID);
 	}
 	public void executeTasks(long mips, long memory, double bw, double diskLatency) {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
+			getTaskSchedulerPolicy().submitTasks(taskList);
 			
 		}
 		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
@@ -223,6 +226,18 @@ public class VM {
 	 */
 	public void setAllocatedMips(long allocatedMips) {
 		this.allocatedMips = allocatedMips;
+	}
+	/**
+	 * @return the finishedTaskList
+	 */
+	public List<Task> getFinishedTaskList() {
+		return finishedTaskList;
+	}
+	/**
+	 * @param finishedTaskList the finishedTaskList to set
+	 */
+	public void setFinishedTaskList(List<Task> finishedTaskList) {
+		this.finishedTaskList = finishedTaskList;
 	}
 
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 public abstract class TaskSchedulerPolicy {
 	private List<Task> taskList;
-	private List<Task> runningTaskList;
-	private List<Task> finishedTaskList;
+	protected List<Task> runningTaskList;
+	protected List<Task> finishedTaskList;
 	private List<Task> failedTaskList;
 	private int allocatedCores;
 	private long allocatedMipsPerCore;
@@ -25,7 +25,12 @@ public abstract class TaskSchedulerPolicy {
 		failedTaskList = new ArrayList<Task>();
 		previousProcessedTime = Double.MAX_VALUE;
 	}
-	
+	public void submitTasks(List<Task> taskList) {
+		// TODO Auto-generated method stub
+		this.getTaskList().addAll(taskList);
+		this.getRunningTaskList().addAll(taskList);
+	}
+
 	/**
 	 * @return the runningTaskList
 	 */
@@ -141,5 +146,6 @@ public abstract class TaskSchedulerPolicy {
 		// TODO Auto-generated method stub
 		getTaskList().add(task);
 	}
+
 
 }

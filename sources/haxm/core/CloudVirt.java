@@ -4,8 +4,10 @@ import haxm.LogFile;
 import haxm.VirtState;
 import haxm.VirtStateEnum;
 import haxm.components.CloudRegistry;
+import haxm.components.VirtUser;
 import haxm.holders.EntityHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,6 +27,22 @@ public class CloudVirt{
 	/**A list of simulation entities*/	
 	public static EntityHolder entityHolder;
 	
+	private static List<VirtUser> userList;
+	
+	/**
+	 * @return the userList
+	 */
+	public static List<VirtUser> getUserList() {
+		return userList;
+	}
+
+	/**
+	 * @param userList the userList to set
+	 */
+	public static void setUserList(List<VirtUser> userList) {
+		CloudVirt.userList = userList;
+	}
+
 	/**A State object to maintain the state of simulation*/	
 	private static VirtState simulationState;
 	
@@ -47,6 +65,8 @@ public class CloudVirt{
 		entityLog = new LogFile("entity.txt");
 		
 		cloudRegistry = new CloudRegistry("CloudRegistry1");
+		
+		userList = new ArrayList<VirtUser>();
 		
 	}
 	
@@ -172,5 +192,9 @@ public class CloudVirt{
 	
 	public static void addEntity(VirtEntity entity){
 		entityHolder.addEntity(entity);
+	}
+
+	public static void addUser(VirtUser virtUser) {
+		userList.add(virtUser);
 	}
 }

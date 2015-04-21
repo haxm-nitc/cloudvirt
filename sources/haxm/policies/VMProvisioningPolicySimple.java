@@ -3,6 +3,7 @@ package haxm.policies;
 import haxm.components.Datacenter;
 import haxm.components.Host;
 import haxm.components.VM;
+import haxm.core.CloudVirt;
 
 public class VMProvisioningPolicySimple extends VMProvisioningPolicy{
 
@@ -13,6 +14,7 @@ public class VMProvisioningPolicySimple extends VMProvisioningPolicy{
 				return host;
 			}
 		}
+		CloudVirt.mainLog.append("Failed to create VM - inadequate resources in datacenter");
 		return null;
 	}
 

@@ -13,12 +13,26 @@ import haxm.policies.VMProvisioningPolicy;
 
 public class Datacenter extends VirtEntity{
 	
-	
+	private boolean executing = false;
 	private DatacenterConfiguration datacenterConfiguration;
 	
 	private VMProvisioningPolicy vmProvisioningPolicy;
 	
 	private List<VM> vmList;
+	/**
+	 * @return the vmList
+	 */
+	public List<VM> getVmList() {
+		return vmList;
+	}
+
+	/**
+	 * @param vmList the vmList to set
+	 */
+	public void setVmList(List<VM> vmList) {
+		this.vmList = vmList;
+	}
+
 	private HashMap<Integer, VM> vmIdToVmMap;
 	
 	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration, VMProvisioningPolicy vmProvisioningPolicy) {
@@ -96,16 +110,38 @@ public class Datacenter extends VirtEntity{
 			}
 		}
 		// TODO termination
-		schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+		if(minTime == Double.MAX_VALUE){
+			return;
+		}else{
+			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+		}	
 		
+		//System.out.println("dsfsd");
 		// TODO completion check
+		for(VM vm : getVmList()){
+			List<Task> taskList = vm.getFinishedTaskList();
+			if(taskList != null){
+				for(Task task : taskList){
+					scheduleNow(task.getUserId(), TagEnum.TASK_FINISHED, task);
+				}
+			}
+			vm.getFinishedTaskList().removeAll(taskList);
+			
+			if(vm.getVmState().getState() == VirtStateEnum.FINISHED){
+				scheduleNow(vm.getUserId(), TagEnum.VM_FINISHED, vm);
+			}
+		}
 		
 	}
 
 	private void handle_SUBMIT_TASK(VirtEvent event) {		
 		Task task = (Task) event.getData();
-		VM vm = vmIdToVmMap.get(task.getVmId());
-		vm.addTask(task);
+		VM vm = task.getVm();
+		vm.addTask(task);		
+		if(!executing){
+			executing = true;
+			scheduleNow(getId(), TagEnum.TASK_EXECUTION);
+		}
 	}
 
 	private void handle_CREATE_VM_WITH_ACK(VirtEvent event) {
@@ -152,4 +188,4 @@ public class Datacenter extends VirtEntity{
 	
 	
 
-}
+};

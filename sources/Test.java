@@ -3,6 +3,7 @@ import java.util.List;
 
 import haxm.components.CPU;
 import haxm.components.CPUTasklet;
+import haxm.components.CloudRegistry;
 import haxm.components.Core;
 import haxm.components.DIOTasklet;
 import haxm.components.Datacenter;
@@ -26,6 +27,7 @@ public class Test {
 		CloudVirt.initSimulationEnvironment();
 		Datacenter datacenter1 = createDatacenter("Datacenter1");
 		VirtUser virtUser = new VirtUser("virtUser1", new VirtUserPolicySimple()); 
+		CloudVirt.addUser(virtUser);
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
 		
@@ -42,7 +44,7 @@ public class Test {
 		taskletList.add(cpuTasklet);
 		
 		Task task = new Task(taskletList);
-		task.setVmId(vm.getId());
+		task.setVm(vm);
 		task.setUserId(virtUser.getId());
 		
 		List<Task> taskList = new ArrayList<Task>();
@@ -55,12 +57,6 @@ public class Test {
 	}
 
 	private static Datacenter createDatacenter(String string) {
-		Core core1 = new Core(1000);
-		
-		List<Core> cores = new ArrayList<Core>();
-		cores.add(core1);
-		
-
 		
 		Storage storage = null;
 		
