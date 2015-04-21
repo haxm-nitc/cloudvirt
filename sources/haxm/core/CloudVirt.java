@@ -33,21 +33,6 @@ public class CloudVirt{
 	/**A list of simulation entities*/	
 	public static EntityHolder entityHolder;
 	
-	private static List<VirtUser> userList;
-	
-	/**
-	 * @return the userList
-	 */
-	public static List<VirtUser> getUserList() {
-		return userList;
-	}
-
-	/**
-	 * @param userList the userList to set
-	 */
-	public static void setUserList(List<VirtUser> userList) {
-		CloudVirt.userList = userList;
-	}
 
 	/**A State object to maintain the state of simulation*/	
 	private static VirtState simulationState;
@@ -58,6 +43,8 @@ public class CloudVirt{
 	public static LogFile mainLog;
 	public static LogFile eventsLog;
 	public static LogFile entityLog;
+	public static LogFile vmsLog;
+	public static LogFile tasksLog;
 	
 	public static void initSimulationEnvironment(){
 		
@@ -69,10 +56,10 @@ public class CloudVirt{
 		mainLog = new LogFile("log.txt");
 		eventsLog = new LogFile("events.txt");
 		entityLog = new LogFile("entity.txt");
+		vmsLog = new LogFile("vms.txt");
+		tasksLog = new LogFile("tasks.txt");
 		
 		cloudRegistry = new CloudRegistry("CloudRegistry1");
-		
-		userList = new ArrayList<VirtUser>();
 		
 	}
 	
@@ -198,9 +185,5 @@ public class CloudVirt{
 	
 	public static void addEntity(VirtEntity entity){
 		entityHolder.addEntity(entity);
-	}
-
-	public static void addUser(VirtUser virtUser) {
-		userList.add(virtUser);
 	}
 }

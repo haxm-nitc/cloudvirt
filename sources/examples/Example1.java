@@ -28,12 +28,13 @@ public class Example1 {
 		CloudVirt.initSimulationEnvironment();
 		Datacenter datacenter1 = createDatacenter("Datacenter1");
 		VirtUser virtUser = new VirtUser("virtUser1", new VirtUserPolicySimple()); 
-		CloudVirt.addUser(virtUser);
+		
 		
 		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
 		
 		//(mips,memory,bw,policy)
 		VM vm = new VM(2, 1000, 10, taskSchedulerPolicy);
+		vm.setUserId(virtUser.getId());
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm);
 		virtUser.submitVMs(vmList);

@@ -19,6 +19,7 @@ public class Datacenter extends VirtEntity{
 	private VMProvisioningPolicy vmProvisioningPolicy;
 	
 	private List<VM> vmList;
+	private List<VM> finishedVmList;
 	/**
 	 * @return the vmList
 	 */
@@ -44,6 +45,7 @@ public class Datacenter extends VirtEntity{
 		this.getVmProvisioningPolicy().setHostList(datacenterConfiguration.getHostList());
 		
 		this.vmList = new ArrayList<VM>();
+		this.finishedVmList = new ArrayList<VM>();
 		vmIdToVmMap = new HashMap<Integer, VM>();
 		
 		for(Host host : datacenterConfiguration.getHostList()){
@@ -109,36 +111,60 @@ public class Datacenter extends VirtEntity{
 				minTime = time;
 			}
 		}
-		// TODO termination
+		// completion check
+		List<VM> removeList = new ArrayList<VM>();
+		for(VM vm : getVmList()){
+			List<Task> taskList = vm.getFinishedTaskList();
+			if(taskList.size() != 0){
+				for(Task task : taskList){
+					scheduleNow(task.getUserId(), TagEnum.TASK_FINISHED, task);
+					
+				}
+			}
+			vm.getFinishedTaskList().removeAll(taskList);
+
+			if(vm.getVmState().getState() == VirtStateEnum.FINISHED){
+				scheduleNow(vm.getUserId(), TagEnum.VM_FINISHED, vm);
+				CloudVirt.vmsLog.append("VM(id-"+vm.getId()+") finished at "+vm.getFinishTime());
+				getFinishedVmList().add(vm);
+				removeList.add(vm);
+			}
+		}
+		getVmList().removeAll(removeList);
+		// termination
 		if(minTime == Double.MAX_VALUE){
 			CloudVirt.mainLog.append("[DC TE] Every VM is finished in the datacenter with ID - " + getId());
 			return;
 		}else{
 			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+			
 		}	
 		
-		//System.out.println("dsfsd");
-		// TODO completion check
-		for(VM vm : getVmList()){
-			List<Task> taskList = vm.getFinishedTaskList();
-			if(taskList != null){
-				for(Task task : taskList){
-					scheduleNow(task.getUserId(), TagEnum.TASK_FINISHED, task);
-				}
-			}
-			vm.getFinishedTaskList().removeAll(taskList);
-			
-			if(vm.getVmState().getState() == VirtStateEnum.FINISHED){
-				scheduleNow(vm.getUserId(), TagEnum.VM_FINISHED, vm);
-			}
-		}
+
 		
 	}
 
 	private void handle_SUBMIT_TASK(VirtEvent event) {		
 		Task task = (Task) event.getData();
+/*		
+		List<Tasklet> tlts = task.getTaskletList();
+		System.out.println(task.getId());
+		for(Tasklet t: tlts){
+			if(t instanceof CPUTasklet){
+				System.out.println(((CPUTasklet)t).getRemainingInstructionLength() );
+			}
+			if(t instanceof DIOTasklet){
+				System.out.println(((DIOTasklet)t).getRemainingData() );
+			}
+			if(t instanceof NIOTasklet){
+				System.out.println(((NIOTasklet)t).getRemainingData() );
+			}
+		}
+*/		
+		
 		VM vm = task.getVm();
-		vm.addTask(task);	
+	
+		vm.addTask(task);
 		task.setDatacenterId(getId());
 		if(!executing){
 			executing = true;
@@ -186,6 +212,14 @@ public class Datacenter extends VirtEntity{
 	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
 		this.datacenterConfiguration = datacenterConfiguration;
 		this.datacenterConfiguration.setDatacenterId(getId());
+	}
+
+	public List<VM> getFinishedVmList() {
+		return finishedVmList;
+	}
+
+	public void setFinishedVmList(List<VM> finishedVmList) {
+		this.finishedVmList = finishedVmList;
 	}
 	
 	

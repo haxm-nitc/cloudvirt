@@ -9,18 +9,18 @@ import java.util.List;
 public abstract class TaskSchedulerPolicy {
 	private List<Task> taskList;
 	protected List<Task> runningTaskList;
-	protected List<Task> finishedTaskList;
+//	protected List<Task> finishedTaskList;
 	private List<Task> failedTaskList;
 	private double allocatedBW;
 	private double allocatedMemory;
-	private VM vm;
+	protected VM vm;
 	private double previousProcessedTime;
 
 	
 	public TaskSchedulerPolicy(){
 		taskList = new ArrayList<Task>();
 		runningTaskList = new ArrayList<Task>();
-		finishedTaskList = new ArrayList<Task>();
+//		finishedTaskList = new ArrayList<Task>();
 		failedTaskList = new ArrayList<Task>();
 		previousProcessedTime = 0;
 	}
@@ -47,18 +47,6 @@ public abstract class TaskSchedulerPolicy {
 	 */
 	public void setRunningTaskList(List<Task> runningTaskList) {
 		this.runningTaskList = runningTaskList;
-	}
-	/**
-	 * @return the finishedTaskList
-	 */
-	public List<Task> getFinishedTaskList() {
-		return finishedTaskList;
-	}
-	/**
-	 * @param finishedTaskList the finishedTaskList to set
-	 */
-	public void setFinishedTaskList(List<Task> finishedTaskList) {
-		this.finishedTaskList = finishedTaskList;
 	}
 	/**
 	 * @return the failedTaskList
@@ -126,6 +114,7 @@ public abstract class TaskSchedulerPolicy {
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub
 		getTaskList().add(task);
+		getRunningTaskList().add(task);
 	}
 
 

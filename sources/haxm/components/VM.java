@@ -5,6 +5,7 @@ import java.util.List;
 
 import haxm.VirtState;
 import haxm.VirtStateEnum;
+import haxm.core.CloudVirt;
 import haxm.policies.TaskSchedulerPolicy;
 
 public class VM {
@@ -23,6 +24,7 @@ public class VM {
 	private double allocatedMemory;
 	private TaskSchedulerPolicy taskSchedulerPolicy;
 	private double nextEventTime;
+	private double finishTime;
 	
 	private VirtState vmState;
 	/**
@@ -49,13 +51,16 @@ public class VM {
 	public void executeTasks(long mips, long memory, double bw, double diskLatency) {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
-			getTaskSchedulerPolicy().submitTasks(taskList);
+			//getTaskSchedulerPolicy().submitTasks(taskList);
 		}
+		CloudVirt.vmsLog.append("[exT mips:"+mips+" memory:"+memory+" bw:"+bw+" disklatency:"+diskLatency+" vmid:"+getId());
 		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
 	}
 	public void addTask(Task task) {
 		this.getTaskList().add(task);
 		this.getTaskSchedulerPolicy().addTask(task);
+
+		
 	}
 	/**
 	 * @return the vm Id
@@ -238,6 +243,12 @@ public class VM {
 	 */
 	public void setFinishedTaskList(List<Task> finishedTaskList) {
 		this.finishedTaskList = finishedTaskList;
+	}
+	public double getFinishTime() {
+		return finishTime;
+	}
+	public void setFinishTime(double finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

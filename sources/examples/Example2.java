@@ -30,34 +30,54 @@ public class Example2{
 		VirtUser virtUser = new VirtUser("virtUser1", new VirtUserPolicySimple()); 
 		
 		
-		TaskSchedulerPolicy taskSchedulerPolicy = new TaskSchedulerPolicySimple();
+		TaskSchedulerPolicy taskSchedulerPolicy1 = new TaskSchedulerPolicySimple();
 		
 		//(mips,memory,bw,policy)
-		VM vm1 = new VM(2, 1000, 10, taskSchedulerPolicy);
-		VM vm2 = new VM(5, 1000, 15, taskSchedulerPolicy);
-		VM vm3 = new VM(7, 1000, 20, taskSchedulerPolicy);
+		VM vm1 = new VM(2, 1000, 10, taskSchedulerPolicy1);
+		vm1.setUserId(virtUser.getId());
+		
+		TaskSchedulerPolicy taskSchedulerPolicy2 = new TaskSchedulerPolicySimple();
+		VM vm2 = new VM(5, 1000, 15, taskSchedulerPolicy2);
+		vm2.setUserId(virtUser.getId());
 		
 		List<VM> vmList = new ArrayList<VM>();
 		vmList.add(vm1);
 		vmList.add(vm2);
-		vmList.add(vm3);
+
 		
 		virtUser.submitVMs(vmList);
 		
-		CPUTasklet cpuTasklet = new CPUTasklet(10000000);
-		DIOTasklet diskTasklet = new DIOTasklet(500);
+		DIOTasklet diskTasklet1 = new DIOTasklet(500);
+		CPUTasklet cpuTasklet1 = new CPUTasklet(10000000);
 		
-		List<Tasklet> taskletList = new ArrayList<Tasklet>();
-		taskletList.add(diskTasklet);
-		taskletList.add(cpuTasklet);
+		List<Tasklet> taskletList1 = new ArrayList<Tasklet>();
+		taskletList1.add(diskTasklet1);
+		taskletList1.add(cpuTasklet1);
 		
-		Task task = new Task(taskletList);
-		task.setVm(vm1);
-		task.setUserId(virtUser.getId());
+		Task task1 = new Task(taskletList1);
+		task1.setVm(vm1);
+		task1.setUserId(virtUser.getId());
 		
-		List<Task> taskList = new ArrayList<Task>();
-		taskList.add(task);
-		virtUser.submitTasks(taskList);
+		List<Task> taskList1 = new ArrayList<Task>();
+		taskList1.add(task1);
+		virtUser.submitTasks(taskList1);
+
+		DIOTasklet diskTasklet2 = new DIOTasklet(1000);
+		CPUTasklet cpuTasklet2 = new CPUTasklet(30000000);
+
+		
+		List<Tasklet> taskletList2 = new ArrayList<Tasklet>();
+		taskletList2.add(diskTasklet2);
+		taskletList2.add(cpuTasklet2);
+		
+		Task task2 = new Task(taskletList2);
+		task2.setVm(vm2);
+		task2.setUserId(virtUser.getId());
+		
+		List<Task> taskList2 = new ArrayList<Task>();
+		taskList2.add(task2);
+		virtUser.submitTasks(taskList2);
+
 		System.out.println("Simulation started");
 		CloudVirt.startSimulation();	
 		System.out.println("Simulation finished");
@@ -68,7 +88,7 @@ public class Example2{
 		
 		Storage storage = null;
 		
-		long mips = 5;
+		long mips = 20;
 		double bw = 100; //mbps
 		long memory = 8000;
 		double disklatency=10;

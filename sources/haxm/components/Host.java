@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Host {
+	private static int numHosts = 0;
+	private int id;
 	private VMSchedulerPolicy vmSchedulerPolicy;
 	private MemoryProvisioningPolicy memoryProvisioningPolicy;
 	private BWProvisioningPolicy bwProvisioningPolicy;
@@ -36,14 +38,15 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(Storage storage, long mips, long memory, double bandwidth,double disklatency) {
+	public Host(Storage storage, long mips, long memory, double bandwidth,double diskLatency) {
 		super();
-		this.diskLatency=disklatency;
+		this.setId(++numHosts);
+		this.diskLatency = diskLatency;
 		this.storage = storage;
 		this.memory = memory;
 		this.bandwidth = bandwidth;
 		this.mips = mips;
-		this.setVmList(new ArrayList<VM>());
+		this.vmList = new ArrayList<VM>();
 		hostState = new VirtState(VirtStateEnum.INVALID);
 		vmSchedulerPolicy = new VMSchedulerPolicySimple(mips);
 		bwProvisioningPolicy = new BWProvisioningPolicySimple(bandwidth);
@@ -53,21 +56,34 @@ public class Host {
 	public void executeVMs() {
 		double minTime = Double.MAX_VALUE;
 		double time;
+		List<VM> removeList = new ArrayList<VM>();
 		for(VM vm : getVmList()){
+		//	System.out.println(vm.getId());
+			if(vm.getId() == 2){
+				int j=5;
+				j+=9;
+			}
 			// TODO resources as arguments
 			vm.executeTasks(vmSchedulerPolicy.getAllocatedMips(vm), 
 					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
 					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
 			if(vm.getVmState().getState()==VirtStateEnum.FINISHED){
 				getVmSchedulerPolicy().deallocateMips(vm);
+				// TODO redistribute resources
+				removeList.add(vm);
 			}else{	
 	
 				time = vm.getNextEventTime();
 				if(time < minTime){
 					minTime = time;
 				}
-			}	
+				
+			}
+			
 		}
+		//System.out.println(minTime);
+		getVmList().removeAll(removeList);
+		
 		this.setNextEventTime(minTime);
 		
 	}
@@ -194,7 +210,7 @@ public class Host {
 	}
 	public void addVM(VM vm) {
 		getVmList().add(vm);
-		getVmSchedulerPolicy().addVM(vm);
+	//	getVmSchedulerPolicy().addVM(vm);
 	//	getBwProvisioningPolicy().addVM(vm);
 	//	getMemoryProvisioningPolicy().addVM(vm);
 	}
@@ -203,12 +219,15 @@ public class Host {
 		boolean result = false;
 		
 		if(!bwProvisioningPolicy.canAllocateBW(vm, vm.getRequestedBW())){
+			System.out.println("failed bw vmid-"+vm.getId());
 			return result;
 		}
 		if(!memoryProvisioningPolicy.canAllocateMemory(vm, vm.getRequestedMemory())){
+			System.out.println("failed memory vmid-"+vm.getId());
 			return result;
 		}
 		if(!vmSchedulerPolicy.canAllocateMips(vm, vm.getRequestedMips())){
+			System.out.println("failed mips vmid-"+vm.getId());
 			return result;
 		}
 		
@@ -232,6 +251,14 @@ public class Host {
 	 */
 	public void setMips(long mips) {
 		this.mips = mips;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 }

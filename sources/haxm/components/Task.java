@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
+	private int id;
+	private static int numTasks = 0;
 	private List<Tasklet> taskletList;
 	private List<Tasklet> finishedTaskletList;
 	public List<Tasklet> getFinishedTaskletList() {
@@ -27,6 +29,7 @@ public class Task {
 
 
 	public Task(List<Tasklet> taskletlist){
+		this.id = ++numTasks;
 		this.setTaskletList(taskletlist);
 		finishedTaskletList = new ArrayList<Tasklet>();
 		taskState = new VirtState(VirtStateEnum.INVALID);
@@ -65,18 +68,13 @@ public class Task {
 	}
 
 	public void updateExecution(double duration, long mips, long memory, double bw, double diskLatency) {
-		CloudVirt.mainLog.append("[Task UE] mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration
-				+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
+		CloudVirt.tasksLog.append("[Task UE] mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration 
+			+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
 		
 		if(taskState.getState() == VirtStateEnum.INVALID){
 			taskState.setState(VirtStateEnum.RUNNING);
 		}
 		
-		// TODO Auto-generated method stub
-		if(taskletList.size() == 0){
-			setRemainingTime(0);
-			taskState.setState(VirtStateEnum.FINISHED);
-		}
 		Tasklet tasklet = taskletList.get(0);
 		switch(tasklet.getTaskletType()){
 			case Tasklet.CPU:
@@ -85,6 +83,11 @@ public class Task {
 				if(remInstr < duration * mips * 1000000){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
+					if(getTaskletList().size() == 0){
+						setRemainingTime(0);
+						taskState.setState(VirtStateEnum.FINISHED);
+						return;
+					}
 					updateExecution(duration - remInstr/(mips*1000000), mips, memory, bw, diskLatency);
 				}else{
 					cpuTasklet.setRemainingInstructionLength((long) (remInstr - duration*mips*1000000));
@@ -97,6 +100,11 @@ public class Task {
 				if(remainingDIOData < duration * diskLatency){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
+					if(getTaskletList().size() == 0){
+						setRemainingTime(0);
+						taskState.setState(VirtStateEnum.FINISHED);
+						return;
+					}
 					updateExecution(duration - remainingDIOData/diskLatency, mips, memory, bw, diskLatency);
 				}else{
 					dioTasklet.setRemainingData((long) (remainingDIOData - duration*diskLatency));
@@ -109,16 +117,20 @@ public class Task {
 				if(remainingNIOData < duration * diskLatency){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
+					if(getTaskletList().size() == 0){
+						setRemainingTime(0);
+						taskState.setState(VirtStateEnum.FINISHED);
+						return;
+					}
 					updateExecution(duration - remainingNIOData/bw, mips, memory, bw, diskLatency);
 				}else{
 					nioTasklet.setRemainingData((long) (remainingNIOData - duration*diskLatency));
 					setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
 				}
 				
-				break;
-				
-				
+				break;				
 		}
+		
 		
 		
 	}
@@ -157,6 +169,14 @@ public class Task {
 	 */
 	public void setVm(VM vm) {
 		this.vm = vm;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

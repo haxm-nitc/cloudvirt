@@ -11,6 +11,7 @@ public class VMProvisioningPolicySimple extends VMProvisioningPolicy{
 	public Host allocateHostToVM(VM vm, Datacenter datacenter) {
 		for(Host host : getHostList()){
 			if(host.createVM(vm)){
+				//CloudVirt.mainLog.append("VM(id-"+vm.getId()+") created in Host(id-"+host.getId()+") in Datacenter(id-"+datacenter.getId()+")");
 				return host;
 			}
 		}
