@@ -191,6 +191,7 @@ public class Host {
 		this.bwProvisioningPolicy = bwProvisioningPolicy;
 	}
 	public void addVM(VM vm) {
+		//System.out.println(vm.getId());
 		getVmList().add(vm);
 		vm.setHost(this);
 	//	getVmSchedulerPolicy().addVM(vm);

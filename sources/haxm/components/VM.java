@@ -57,6 +57,7 @@ public class VM {
 		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
 	}
 	public void addTask(Task task) {
+		
 		this.getTaskList().add(task);
 		this.getTaskSchedulerPolicy().addTask(task);
 

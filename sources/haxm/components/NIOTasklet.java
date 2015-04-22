@@ -7,10 +7,10 @@ public class NIOTasklet extends Tasklet{
 	 * @param data
 	 * @param remainingData
 	 */
-	public NIOTasklet(long data, long remainingData) {
+	public NIOTasklet(long data) {
 		super();
 		this.data = data;
-		this.remainingData = remainingData;
+		this.remainingData = data;
 		this.setTaskletType(NETWORKIO);
 	}
 	/**

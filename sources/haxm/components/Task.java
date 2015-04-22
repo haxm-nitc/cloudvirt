@@ -20,7 +20,8 @@ public class Task {
 	public void setFinishedTaskletList(List<Tasklet> finishedTaskletList) {
 		this.finishedTaskletList = finishedTaskletList;
 	}
-
+	private double startTime;
+	private double finishTime;
 	private double remainingTime;
 	private VM vm;
 	private int userId;
@@ -73,12 +74,12 @@ public class Task {
 			+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
 		if(duration == 0){
 			setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
+			setStartTime(CloudVirt.getCurrentTime());
 			return;
 		}
 		if(taskState.getState() == VirtStateEnum.INVALID){
 			taskState.setState(VirtStateEnum.RUNNING);
 		}
-		
 		Tasklet tasklet = taskletList.get(0);
 		switch(tasklet.getTaskletType()){
 			case Tasklet.CPU:
@@ -88,6 +89,7 @@ public class Task {
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
+						setFinishTime(CloudVirt.getCurrentTime() - (duration - remInstr/(mips*1000000)));
 						finishTask();
 						return;
 					}
@@ -104,6 +106,7 @@ public class Task {
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
+						setFinishTime(CloudVirt.getCurrentTime() - (duration - remainingDIOData/diskLatency));
 						finishTask();
 						return;
 					}
@@ -114,18 +117,20 @@ public class Task {
 				}
 				break;
 			case Tasklet.NETWORKIO:
+				//System.out.println("niot");
 				NIOTasklet nioTasklet = (NIOTasklet) tasklet;
 				long remainingNIOData = nioTasklet.getRemainingData();
-				if(remainingNIOData <= duration * diskLatency){
+				if(remainingNIOData <= duration * bw){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
+						setFinishTime(CloudVirt.getCurrentTime() - (duration - remainingNIOData/bw));
 						finishTask();
 						return;
 					}
 					updateExecution(duration - remainingNIOData/bw, mips, memory, bw, diskLatency);
 				}else{
-					nioTasklet.setRemainingData((long) (remainingNIOData - duration*diskLatency));
+					nioTasklet.setRemainingData((long) (remainingNIOData - duration*bw));
 					setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
 				}
 				
@@ -134,6 +139,14 @@ public class Task {
 		
 		
 		
+	}
+
+	public VirtState getTaskState() {
+		return taskState;
+	}
+
+	public void setTaskState(VirtState taskState) {
+		this.taskState = taskState;
 	}
 
 	private void finishTask() {
@@ -186,6 +199,22 @@ public class Task {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(double startTime) {
+		this.startTime = startTime;
+	}
+
+	public double getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(double finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

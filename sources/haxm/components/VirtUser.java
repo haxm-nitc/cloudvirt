@@ -87,7 +87,8 @@ public class VirtUser extends VirtEntity{
 		Task task = (Task) event.getData();
 		VM vm = task.getVm();
 		int vmId = vm.getId();
-		CloudVirt.tasksLog.append("[VU HTF] Task id:"+task.getId() + "of user id:"+getId()+"inside VM id:"+vmId);
+		CloudVirt.tasksLog.append("[VU HTF] Task finished id:"+task.getId() + "of user id:"+getId()+"inside VM id:"+vmId+" start time:"
+				+task.getStartTime()+" finished time:"+task.getFinishTime());
 		int numTasks = vmToNumTasks.get(vmId);
 		if(numTasks == 1){
 			vmToNumTasks.remove(vmId);

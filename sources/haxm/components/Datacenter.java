@@ -168,7 +168,7 @@ public class Datacenter extends VirtEntity{
 		
 	}
 
-	private void handle_SUBMIT_TASK(VirtEvent event) {		
+	private void handle_SUBMIT_TASK(VirtEvent event) {	
 		Task task = (Task) event.getData();
 /*		
 		List<Tasklet> tlts = task.getTaskletList();
@@ -187,7 +187,7 @@ public class Datacenter extends VirtEntity{
 */		
 		
 		VM vm = task.getVm();
-	
+		
 		vm.addTask(task);
 		task.setDatacenterId(getId());
 		if(!executing){

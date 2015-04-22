@@ -24,9 +24,11 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 	@Override
 	public double runTasks(long mips, long memory, double bw, double diskLatency) {
 		// TODO Auto-generated method stub
+		
 		List<Task> runTaskList = getRunningTaskList();
 		double minTime = Double.MAX_VALUE;
 		int numTasks = runTaskList.size();
+		
 		if(numTasks == 0){
 			return minTime;
 		}
@@ -34,14 +36,18 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		if(getPreviousProcessedTime() == Double.MAX_VALUE){
 			setPreviousProcessedTime(currentTime);
 		}
+		List<Task> removeList = new ArrayList<Task>();
 		for(Task task : runTaskList){
 			task.updateExecution(currentTime - getPreviousProcessedTime(), mips/numTasks, memory/numTasks, bw/numTasks, diskLatency/numTasks);
-			double remainingTime = task.getRemainingTime();	
-			if(remainingTime!=0 && minTime > remainingTime){
+			double remainingTime = task.getRemainingTime();
+			if(remainingTime == 0){
+				removeList.add(task);
+			}else if(minTime > remainingTime) {
 				minTime = remainingTime;
 			}
 			
 		}
+		getRunningTaskList().removeAll(removeList);
 		setPreviousProcessedTime(currentTime);
 		return minTime;
 	}		
