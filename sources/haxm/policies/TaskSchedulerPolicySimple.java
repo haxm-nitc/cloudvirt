@@ -24,11 +24,29 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 	@Override
 	public double runTasks(long mips, long memory, double bw, double diskLatency) {
 		// TODO Auto-generated method stub
+		List<Task> runTaskList = getRunningTaskList();
+		double minTime = Double.MAX_VALUE;
+		int numTasks = runTaskList.size();
+		if(numTasks == 0){
+			return minTime;
+		}
 		double currentTime = CloudVirt.getCurrentTime();
 		if(getPreviousProcessedTime() == Double.MAX_VALUE){
 			setPreviousProcessedTime(currentTime);
 		}
-		List<Task> taskList = getRunningTaskList();
+		for(Task task : runTaskList){
+			task.updateExecution(currentTime - getPreviousProcessedTime(), mips/numTasks, memory/numTasks, bw/numTasks, diskLatency/numTasks);
+			double remainingTime = task.getRemainingTime();	
+			if(remainingTime!=0 && minTime > remainingTime){
+				minTime = remainingTime;
+			}
+			
+		}
+		setPreviousProcessedTime(currentTime);
+		return minTime;
+	}		
+/*
+		
 		List<Task> removeList = new ArrayList<Task>();
 		int numTasks = taskList.size();
 		double minTime = Double.MAX_VALUE;
@@ -62,5 +80,5 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		setPreviousProcessedTime(currentTime);
 		return minTime;
 	}
-	
+*/	
 }

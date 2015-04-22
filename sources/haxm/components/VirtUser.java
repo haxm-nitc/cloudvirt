@@ -1,6 +1,7 @@
 package haxm.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import haxm.VirtStateEnum;
@@ -19,6 +20,7 @@ public class VirtUser extends VirtEntity{
 	private List<Integer> selectedDatacenterIdList;
 	private List<DatacenterConfiguration> availableConfigurationsList;
 	private VirtUserPolicy userPolicy;
+	private HashMap<Integer, Integer> vmToNumTasks;
 	
 	public VirtUser(String name, VirtUserPolicy policy){
 		super(name);
@@ -26,6 +28,7 @@ public class VirtUser extends VirtEntity{
 		this.createdVMList = new ArrayList<VM>();
 		this.setFailedVMList(new ArrayList<VM>());
 		this.setTaskList(new ArrayList<Task>());
+		this.vmToNumTasks = new HashMap<Integer, Integer>();
 		this.availableDatacenterIdList = new ArrayList<Integer>();
 		this.selectedDatacenterIdList = new ArrayList<Integer>();
 		this.availableConfigurationsList = new ArrayList<DatacenterConfiguration>();
@@ -71,9 +74,28 @@ public class VirtUser extends VirtEntity{
 			case ACK_CREATE_VM:
 				handle_ACK_CREATE_VM(event);
 				break;
+			case TASK_FINISHED:
+				handle_TASK_FINISHED(event);
+				break;
 				
 		}
 		return false;
+	}
+
+	private void handle_TASK_FINISHED(VirtEvent event) {
+		// TODO Auto-generated method stub
+		Task task = (Task) event.getData();
+		VM vm = task.getVm();
+		int vmId = vm.getId();
+		CloudVirt.tasksLog.append("[VU HTF] Task id:"+task.getId() + "of user id:"+getId()+"inside VM id:"+vmId);
+		int numTasks = vmToNumTasks.get(vmId);
+		if(numTasks == 1){
+			vmToNumTasks.remove(vmId);
+			scheduleNow(task.getDatacenterId(), TagEnum.VM_DESTROY, vm);
+		}else{
+			vmToNumTasks.put(vm.getId(), numTasks-1);
+		}
+		
 	}
 
 	private void handle_ACK_CREATE_VM(VirtEvent event) {
@@ -155,8 +177,17 @@ public class VirtUser extends VirtEntity{
 	}
 
 	public void submitTasks(List<Task> taskList) {
-		this.getTaskList().addAll(taskList);
-		
+		for(Task task : taskList){
+			VM vm = task.getVm();
+			int vmId = vm.getId();
+			if(vmToNumTasks.get(vmId) == null){
+				vmToNumTasks.put(vmId, 1);
+			}else{
+				int numTasks = vmToNumTasks.get(vmId);
+				vmToNumTasks.put(vmId, numTasks+1);
+			}
+		}
+		this.getTaskList().addAll(taskList);		
 	}
 
 	/**

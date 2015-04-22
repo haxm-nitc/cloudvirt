@@ -22,7 +22,7 @@ public abstract class TaskSchedulerPolicy {
 		runningTaskList = new ArrayList<Task>();
 //		finishedTaskList = new ArrayList<Task>();
 		failedTaskList = new ArrayList<Task>();
-		previousProcessedTime = 0;
+		previousProcessedTime = Double.MAX_VALUE;
 	}
 	public VM getVm() {
 		return vm;

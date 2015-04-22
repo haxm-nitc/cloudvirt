@@ -5,6 +5,7 @@ import haxm.VirtStateEnum;
 import haxm.core.CloudVirt;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 public class Task {
@@ -70,7 +71,10 @@ public class Task {
 	public void updateExecution(double duration, long mips, long memory, double bw, double diskLatency) {
 		CloudVirt.tasksLog.append("[Task UE] mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration 
 			+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
-		
+		if(duration == 0){
+			setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
+			return;
+		}
 		if(taskState.getState() == VirtStateEnum.INVALID){
 			taskState.setState(VirtStateEnum.RUNNING);
 		}
@@ -80,12 +84,11 @@ public class Task {
 			case Tasklet.CPU:
 				CPUTasklet cpuTasklet = (CPUTasklet) tasklet;
 				long remInstr = cpuTasklet.getRemainingInstructionLength();
-				if(remInstr < duration * mips * 1000000){
+				if(remInstr <= duration * mips * 1000000){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
-						setRemainingTime(0);
-						taskState.setState(VirtStateEnum.FINISHED);
+						finishTask();
 						return;
 					}
 					updateExecution(duration - remInstr/(mips*1000000), mips, memory, bw, diskLatency);
@@ -97,12 +100,11 @@ public class Task {
 			case Tasklet.DISKIO:
 				DIOTasklet dioTasklet = (DIOTasklet) tasklet;
 				long remainingDIOData = dioTasklet.getRemainingData();
-				if(remainingDIOData < duration * diskLatency){
+				if(remainingDIOData <= duration * diskLatency){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
-						setRemainingTime(0);
-						taskState.setState(VirtStateEnum.FINISHED);
+						finishTask();
 						return;
 					}
 					updateExecution(duration - remainingDIOData/diskLatency, mips, memory, bw, diskLatency);
@@ -114,12 +116,11 @@ public class Task {
 			case Tasklet.NETWORKIO:
 				NIOTasklet nioTasklet = (NIOTasklet) tasklet;
 				long remainingNIOData = nioTasklet.getRemainingData();
-				if(remainingNIOData < duration * diskLatency){
+				if(remainingNIOData <= duration * diskLatency){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
 					if(getTaskletList().size() == 0){
-						setRemainingTime(0);
-						taskState.setState(VirtStateEnum.FINISHED);
+						finishTask();
 						return;
 					}
 					updateExecution(duration - remainingNIOData/bw, mips, memory, bw, diskLatency);
@@ -133,6 +134,14 @@ public class Task {
 		
 		
 		
+	}
+
+	private void finishTask() {
+		// TODO Auto-generated method stub
+		setRemainingTime(0);
+		taskState.setState(VirtStateEnum.FINISHED);
+		Datacenter datacenter = (Datacenter) CloudVirt.entityHolder.getEntityByID(datacenterId);
+		datacenter.notifyTaskFinished(this, getUserId());	
 	}
 
 	private double calculateRemainingTime(long mips, long memory, double bw,

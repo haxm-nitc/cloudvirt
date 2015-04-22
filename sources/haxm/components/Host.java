@@ -56,34 +56,16 @@ public class Host {
 	public void executeVMs() {
 		double minTime = Double.MAX_VALUE;
 		double time;
-		List<VM> removeList = new ArrayList<VM>();
 		for(VM vm : getVmList()){
-		//	System.out.println(vm.getId());
-			if(vm.getId() == 2){
-				int j=5;
-				j+=9;
-			}
 			// TODO resources as arguments
 			vm.executeTasks(vmSchedulerPolicy.getAllocatedMips(vm), 
 					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
 					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
-			if(vm.getVmState().getState()==VirtStateEnum.FINISHED){
-				getVmSchedulerPolicy().deallocateMips(vm);
-				// TODO redistribute resources
-				removeList.add(vm);
-			}else{	
-	
-				time = vm.getNextEventTime();
-				if(time < minTime){
-					minTime = time;
-				}
-				
+			time = vm.getNextEventTime();
+			if(time < minTime){
+				minTime = time;
 			}
-			
-		}
-		//System.out.println(minTime);
-		getVmList().removeAll(removeList);
-		
+		}		
 		this.setNextEventTime(minTime);
 		
 	}
@@ -210,6 +192,7 @@ public class Host {
 	}
 	public void addVM(VM vm) {
 		getVmList().add(vm);
+		vm.setHost(this);
 	//	getVmSchedulerPolicy().addVM(vm);
 	//	getBwProvisioningPolicy().addVM(vm);
 	//	getMemoryProvisioningPolicy().addVM(vm);
@@ -259,6 +242,12 @@ public class Host {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void removeVM(VM vm) {
+		// TODO Auto-generated method stub
+		getVmList().remove(vm);
+		
 	}
 	
 }

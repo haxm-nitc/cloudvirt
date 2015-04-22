@@ -20,6 +20,7 @@ public class Datacenter extends VirtEntity{
 	
 	private List<VM> vmList;
 	private List<VM> finishedVmList;
+	private List<VM> destroyedVmList;
 	/**
 	 * @return the vmList
 	 */
@@ -46,6 +47,7 @@ public class Datacenter extends VirtEntity{
 		
 		this.vmList = new ArrayList<VM>();
 		this.finishedVmList = new ArrayList<VM>();
+		this.setDestroyedVmList(new ArrayList<VM>());
 		vmIdToVmMap = new HashMap<Integer, VM>();
 		
 		for(Host host : datacenterConfiguration.getHostList()){
@@ -94,13 +96,26 @@ public class Datacenter extends VirtEntity{
 				handle_SUBMIT_TASK(event);
 				break;
 			case TASK_EXECUTION:
-				handle_TASK_EXECUTION();
+				handle_TASK_EXECUTION(event);
+				break;
+			case VM_DESTROY:
+				handle_VM_DESTROY(event);
 				break;
 		}
 		return false;
 	}
 
-	private void handle_TASK_EXECUTION() {
+	private void handle_VM_DESTROY(VirtEvent event) {
+		// TODO Auto-generated method stub
+		VM vm = (VM) event.getData();
+		Host host = vm.getHost();
+		host.removeVM(vm);
+		host.getVmSchedulerPolicy().deallocateMips(vm);
+		host.getMemoryProvisioningPolicy().deallocateMemory(vm);
+		host.getBwProvisioningPolicy().deallocateBW(vm);
+	}
+
+	private void handle_TASK_EXECUTION(VirtEvent event) {
 		List<Host> hostList = getDatacenterConfiguration().getHostList();
 		double minTime = Double.MAX_VALUE;
 		double time;
@@ -111,6 +126,21 @@ public class Datacenter extends VirtEntity{
 				minTime = time;
 			}
 		}
+		// termination
+		if(minTime == Double.MAX_VALUE){
+			executing = false;
+			CloudVirt.mainLog.append("[DC TE] Every VM is finished in the datacenter with ID - " + getId());
+			return;
+		}else{
+			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
+			
+		}	
+		
+		
+		
+		
+		
+		/*
 		// completion check
 		List<VM> removeList = new ArrayList<VM>();
 		for(VM vm : getVmList()){
@@ -131,14 +161,8 @@ public class Datacenter extends VirtEntity{
 			}
 		}
 		getVmList().removeAll(removeList);
-		// termination
-		if(minTime == Double.MAX_VALUE){
-			CloudVirt.mainLog.append("[DC TE] Every VM is finished in the datacenter with ID - " + getId());
-			return;
-		}else{
-			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
-			
-		}	
+		
+		*/
 		
 
 		
@@ -220,6 +244,20 @@ public class Datacenter extends VirtEntity{
 
 	public void setFinishedVmList(List<VM> finishedVmList) {
 		this.finishedVmList = finishedVmList;
+	}
+
+	public List<VM> getDestroyedVmList() {
+		return destroyedVmList;
+	}
+
+	public void setDestroyedVmList(List<VM> destroyedVmList) {
+		this.destroyedVmList = destroyedVmList;
+	}
+
+	public void notifyTaskFinished(Task task, int userId) {
+		// TODO Auto-generated method stub
+		scheduleNow(userId, TagEnum.TASK_FINISHED, task);
+		
 	}
 	
 	
