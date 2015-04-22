@@ -134,38 +134,7 @@ public class Datacenter extends VirtEntity{
 		}else{
 			schedule(getId(), TagEnum.TASK_EXECUTION, minTime);
 			
-		}	
-		
-		
-		
-		
-		
-		/*
-		// completion check
-		List<VM> removeList = new ArrayList<VM>();
-		for(VM vm : getVmList()){
-			List<Task> taskList = vm.getFinishedTaskList();
-			if(taskList.size() != 0){
-				for(Task task : taskList){
-					scheduleNow(task.getUserId(), TagEnum.TASK_FINISHED, task);
-					
-				}
-			}
-			vm.getFinishedTaskList().removeAll(taskList);
-
-			if(vm.getVmState().getState() == VirtStateEnum.FINISHED){
-				scheduleNow(vm.getUserId(), TagEnum.VM_FINISHED, vm);
-				CloudVirt.vmsLog.append("VM(id-"+vm.getId()+") finished at "+vm.getFinishTime());
-				getFinishedVmList().add(vm);
-				removeList.add(vm);
-			}
 		}
-		getVmList().removeAll(removeList);
-		
-		*/
-		
-
-		
 	}
 
 	private void handle_SUBMIT_TASK(VirtEvent event) {	

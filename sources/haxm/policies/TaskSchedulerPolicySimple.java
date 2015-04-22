@@ -28,7 +28,7 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		List<Task> runTaskList = getRunningTaskList();
 		double minTime = Double.MAX_VALUE;
 		int numTasks = runTaskList.size();
-		
+		//System.out.println(numTasks);
 		if(numTasks == 0){
 			return minTime;
 		}

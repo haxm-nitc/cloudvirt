@@ -58,6 +58,12 @@ public class Host {
 		double time;
 		for(VM vm : getVmList()){
 			// TODO resources as arguments
+/*			
+			System.out.println(vmSchedulerPolicy.getAllocatedMips(vm) + "      " +
+					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm) + "      " +
+					bwProvisioningPolicy.getAllocatedBwForVM(vm) + "       " +
+					diskLatency/vmList.size() + "     " + vm.getId());
+*/			
 			vm.executeTasks(vmSchedulerPolicy.getAllocatedMips(vm), 
 					memoryProvisioningPolicy.getAllocatedMemoryForVM(vm), 
 					bwProvisioningPolicy.getAllocatedBwForVM(vm), diskLatency/vmList.size());
@@ -203,15 +209,15 @@ public class Host {
 		boolean result = false;
 		
 		if(!bwProvisioningPolicy.canAllocateBW(vm, vm.getRequestedBW())){
-			System.out.println("failed bw vmid-"+vm.getId());
+			//System.out.println("failed bw vmid-"+vm.getId());
 			return result;
 		}
 		if(!memoryProvisioningPolicy.canAllocateMemory(vm, vm.getRequestedMemory())){
-			System.out.println("failed memory vmid-"+vm.getId());
+			//System.out.println("failed memory vmid-"+vm.getId());
 			return result;
 		}
 		if(!vmSchedulerPolicy.canAllocateMips(vm, vm.getRequestedMips())){
-			System.out.println("failed mips vmid-"+vm.getId());
+			//System.out.println("failed mips vmid-"+vm.getId());
 			return result;
 		}
 		
