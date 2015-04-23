@@ -2,13 +2,12 @@ package haxm.policies;
 
 import java.util.List;
 
-import haxm.components.CPU;
 import haxm.components.VM;
 
 public abstract class VMSchedulerPolicy {
 
 	protected List<VM> vmList;
-	protected long availableMips;
+	protected  double availableMips;
 	
 	public void addVM(VM vm){
 		getVmList().add(vm);
@@ -30,21 +29,21 @@ public abstract class VMSchedulerPolicy {
 	/**
 	 * @return the availableMips
 	 */
-	public long getAvailableMips() {
+	public  double getAvailableMips() {
 		return availableMips;
 	}
 	/**
 	 * @param availableMips the availableMips to set
 	 */
-	public void setAvailableMips(long availableMips) {
+	public void setAvailableMips(double availableMips) {
 		this.availableMips = availableMips;
 	}
 	
-	public abstract long getAllocatedMips(VM vm);
+	public abstract  double getAllocatedMips(VM vm);
 	
-	public abstract boolean canAllocateMips(VM vm, long mips);
+	public abstract boolean canAllocateMips(VM vm,  double mips);
 	
-	public abstract void allocateMips(VM vm, long mips);
+	public abstract void allocateMips(VM vm,  double mips);
 	
 	public abstract void deallocateMips(VM vm);
 

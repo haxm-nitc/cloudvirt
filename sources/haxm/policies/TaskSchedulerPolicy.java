@@ -30,12 +30,13 @@ public abstract class TaskSchedulerPolicy {
 	public void setVm(VM vm) {
 		this.vm = vm;
 	}
+/*
 	public void submitTasks(List<Task> taskList) {
 		// TODO Auto-generated method stub
 		this.getTaskList().addAll(taskList);
 		this.getRunningTaskList().addAll(taskList);
 	}
-
+*/
 	/**
 	 * @return the runningTaskList
 	 */
@@ -109,7 +110,7 @@ public abstract class TaskSchedulerPolicy {
 	public void setPreviousProcessedTime(double previousProcessedTime) {
 		this.previousProcessedTime = previousProcessedTime;
 	}
-	public abstract double runTasks(long mips, long memory, double bw, double diskLatency);
+	public abstract double runTasks(double mips,  double memory, double bw, double diskLatency);
 
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub

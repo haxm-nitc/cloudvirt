@@ -69,8 +69,8 @@ public class Task {
 		this.datacenterId = datacenterId;
 	}
 
-	public void updateExecution(double duration, long mips, long memory, double bw, double diskLatency) {
-		CloudVirt.tasksLog.append("[Task UE] mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration 
+	public void updateExecution(double duration,  double mips,  double memory, double bw, double diskLatency) {
+		CloudVirt.tasksLog.append("[Task UE] Task id:"+getId()+" mips:"+mips+" memory:"+memory+" bw:"+bw+" dislatency:"+diskLatency+" duration:"+duration 
 			+" userid:"+userId+" datacenterid:"+datacenterId+" vmid:"+vm.getId());
 		if(duration == 0){
 			setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
@@ -101,7 +101,7 @@ public class Task {
 				break;
 			case Tasklet.DISKIO:
 				DIOTasklet dioTasklet = (DIOTasklet) tasklet;
-				long remainingDIOData = dioTasklet.getRemainingData();
+					double remainingDIOData = dioTasklet.getRemainingData();
 				if(remainingDIOData <= duration * diskLatency){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
@@ -112,14 +112,14 @@ public class Task {
 					}
 					updateExecution(duration - remainingDIOData/diskLatency, mips, memory, bw, diskLatency);
 				}else{
-					dioTasklet.setRemainingData((long) (remainingDIOData - duration*diskLatency));
+					dioTasklet.setRemainingData((double) (remainingDIOData - duration*diskLatency));
 					setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
 				}
 				break;
 			case Tasklet.NETWORKIO:
 				//System.out.println("niot");
 				NIOTasklet nioTasklet = (NIOTasklet) tasklet;
-				long remainingNIOData = nioTasklet.getRemainingData();
+					double remainingNIOData = nioTasklet.getRemainingData();
 				if(remainingNIOData <= duration * bw){
 					taskletList.remove(0);
 					finishedTaskletList.add(tasklet);
@@ -130,7 +130,7 @@ public class Task {
 					}
 					updateExecution(duration - remainingNIOData/bw, mips, memory, bw, diskLatency);
 				}else{
-					nioTasklet.setRemainingData((long) (remainingNIOData - duration*bw));
+					nioTasklet.setRemainingData((double) (remainingNIOData - duration*bw));
 					setRemainingTime(calculateRemainingTime(mips, memory, bw, diskLatency));
 				}
 				
@@ -157,13 +157,14 @@ public class Task {
 		datacenter.notifyTaskFinished(this, getUserId());	
 	}
 
-	private double calculateRemainingTime(long mips, long memory, double bw,
+	private double calculateRemainingTime(double mips,  double memory, double bw,
 			double diskLatency) {
 		// TODO Auto-generated method stub
 		double time = 0;
 		for(Tasklet tasklet : taskletList){
 			time += tasklet.calculateRemainingTime(mips, memory, bw, diskLatency);
 		}
+		CloudVirt.tasksLog.append("[Task CR] Task id:"+getId()+" mips:"+mips+" memory:"+memory+" bw:"+bw+" disklatency:"+diskLatency+" remaining time:"+time);
 		return time;
 	}
 

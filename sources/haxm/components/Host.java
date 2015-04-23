@@ -22,9 +22,9 @@ public class Host {
 
 	private List<VM> vmList;
 	private Storage storage;
-	private long memory;
+	private  double memory;
 	private double bandwidth;
-	private long mips;
+	private  double mips;
 	//5 msec per kb
 	private double diskLatency;
 	private int datacenterId;
@@ -38,7 +38,7 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(Storage storage, long mips, long memory, double bandwidth,double diskLatency) {
+	public Host(Storage storage,  double mips,  double memory, double bandwidth,double diskLatency) {
 		super();
 		this.setId(++numHosts);
 		this.diskLatency = diskLatency;
@@ -91,13 +91,13 @@ public class Host {
 	/**
 	 * @return the memory
 	 */
-	public long getMemory() {
+	public  double getMemory() {
 		return memory;
 	}
 	/**
 	 * @param memory the memory to set
 	 */
-	public void setMemory(long memory) {
+	public void setMemory(double memory) {
 		this.memory = memory;
 	}
 	/**
@@ -232,14 +232,14 @@ public class Host {
 	/**
 	 * @return the mips
 	 */
-	public long getMips() {
+	public  double getMips() {
 		return mips;
 	}
 
 	/**
 	 * @param mips the mips to set
 	 */
-	public void setMips(long mips) {
+	public void setMips(double mips) {
 		this.mips = mips;
 	}
 

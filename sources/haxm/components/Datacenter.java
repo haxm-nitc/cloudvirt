@@ -21,6 +21,7 @@ public class Datacenter extends VirtEntity{
 	private List<VM> vmList;
 	private List<VM> finishedVmList;
 	private List<VM> destroyedVmList;
+	
 	/**
 	 * @return the vmList
 	 */
@@ -113,6 +114,7 @@ public class Datacenter extends VirtEntity{
 		host.getVmSchedulerPolicy().deallocateMips(vm);
 		host.getMemoryProvisioningPolicy().deallocateMemory(vm);
 		host.getBwProvisioningPolicy().deallocateBW(vm);
+		CloudVirt.vmsLog.append("[DC HVD] cost:"+getDatacenterConfiguration().getPricingPolicy().costOfVM(vm));
 	}
 
 	private void handle_TASK_EXECUTION(VirtEvent event) {

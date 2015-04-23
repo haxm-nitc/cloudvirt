@@ -82,17 +82,17 @@ public class Example4 {
 	private static Datacenter createDatacenter(String string) {
 		
 		Storage storage1 = null;		
-		long mips1 = 5;
+			double mips1 = 5;
 		double bw1 = 50;
-		long memory1 = 5000;
+			double memory1 = 5000;
 		double disklatency1 = 50;
 		
 		Host host1 = new Host(storage1, mips1, memory1, bw1, disklatency1);
 		
 		Storage storage2 = null;		
-		long mips2 = 7;
+			double mips2 = 7;
 		double bw2 = 70;
-		long memory2 = 7000;
+			double memory2 = 7000;
 		double disklatency2 = 70;
 		
 		Host host2 = new Host(storage2, mips2, memory2, bw2, disklatency2);
@@ -103,7 +103,7 @@ public class Example4 {
 		
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
 		
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, 0, 0, 0);
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, null);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		
 		return datacenter;

@@ -6,20 +6,20 @@ import haxm.policies.MemoryProvisioningPolicy;
 
 public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy{
 
-	private HashMap<VM, Long> vmToMemoryMap;
-     public MemoryProvisioningPolicySimple(long Memory){
+	private HashMap<Integer,  Double> vmToMemoryMap;
+     public MemoryProvisioningPolicySimple(double Memory){
      	setAvailableMemory(Memory);
-     	vmToMemoryMap = new HashMap<VM, Long>();
+     	vmToMemoryMap = new HashMap<Integer,  Double>();
      }
 
 
 	@Override
-	public long getAllocatedMemoryForVM(VM vm) {
-		return vmToMemoryMap.get(vm);
+	public  double getAllocatedMemoryForVM(VM vm) {
+		return vmToMemoryMap.get(vm.getId());
 	}
 
 	@Override
-	public boolean canAllocateMemory(VM vm, long memory) {
+	public boolean canAllocateMemory(VM vm,  double memory) {
 		if(getAvailableMemory() < memory){
 			return false;
 		}else{
@@ -28,14 +28,14 @@ public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy{
 	}
 
 	@Override
-	public void allocateMemory(VM vm, long memory) {
-		vmToMemoryMap.put(vm, memory);
+	public void allocateMemory(VM vm,  double memory) {
+		vmToMemoryMap.put(vm.getId(), memory);
 		
 	}
 
 	@Override
 	public void deallocateMemory(VM vm) {
-		vmToMemoryMap.remove(vm);
+		vmToMemoryMap.remove(vm.getId());
 		
 	}
 }

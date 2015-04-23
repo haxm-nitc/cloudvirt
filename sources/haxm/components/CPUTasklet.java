@@ -30,7 +30,7 @@ public class CPUTasklet extends Tasklet{
 		this.remainingInstructionLength = remainingInstructionLength;
 	}
 	@Override
-	public double calculateRemainingTime(long mips, long memory, double bw,
+	public double calculateRemainingTime(double mips, double memory, double bw,
 			double diskLatency) {
 		// TODO Auto-generated method stub
 		//System.out.println(mips + "     " +getRemainingInstructionLength());

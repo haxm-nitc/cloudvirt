@@ -5,17 +5,17 @@ import haxm.components.VM;
 import haxm.policies.BWProvisioningPolicy;
 
 public class BWProvisioningPolicySimple extends BWProvisioningPolicy{
-	HashMap<VM, Double> vmToBWMap;
+	HashMap<Integer, Double> vmToBWMap;
 	
 	public BWProvisioningPolicySimple(double bw){
 		setAvailableBw(bw);
-		vmToBWMap = new HashMap<VM, Double>();
+		vmToBWMap = new HashMap<Integer, Double>();
 	}
 	
 
 	@Override
 	public double getAllocatedBwForVM(VM vm) {
-		return vmToBWMap.get(vm);
+		return vmToBWMap.get(vm.getId());
 	}
 
 	@Override
@@ -29,11 +29,11 @@ public class BWProvisioningPolicySimple extends BWProvisioningPolicy{
 
 	@Override
 	public void allocateBW(VM vm, double bw) {
-		vmToBWMap.put(vm, bw);
+		vmToBWMap.put(vm.getId(), bw);
 	}
 
 	@Override
 	public void deallocateBW(VM vm) {
-		vmToBWMap.remove(vm);
+		vmToBWMap.remove(vm.getId());
 	}
 }

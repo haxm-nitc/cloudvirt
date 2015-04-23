@@ -15,10 +15,9 @@ public class VM {
 	private int userId;
 	private Host host;
 	private List<Task> taskList;
-	private List<Task> finishedTaskList;
-	private long requestedMips;
-	private long allocatedMips;
-	private long requestedMemory;
+	private  double requestedMips;
+	private  double allocatedMips;
+	private  double requestedMemory;
 	private double requestedBW;
 	private double allocatedBW;
 	private double allocatedMemory;
@@ -34,8 +33,8 @@ public class VM {
 	 * @param requestedBW
 	 * @param taskSchedulerPolicy
 	 */
-	public VM(long requestedMips,
-			long requestedMemory, double requestedBW,
+	public VM(double requestedMips,
+				double requestedMemory, double requestedBW,
 			TaskSchedulerPolicy taskSchedulerPolicy) {
 		super();
 		this.id = ++numVms;
@@ -45,10 +44,9 @@ public class VM {
 		this.taskSchedulerPolicy = taskSchedulerPolicy;
 		this.taskSchedulerPolicy.setVm(this);
 		taskList = new ArrayList<Task>();
-		setFinishedTaskList(new ArrayList<Task>());
 		vmState = new VirtState(VirtStateEnum.INVALID);
 	}
-	public void executeTasks(long mips, long memory, double bw, double diskLatency) {
+	public void executeTasks(double mips,  double memory, double bw, double diskLatency) {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
 			//getTaskSchedulerPolicy().submitTasks(taskList);
@@ -114,13 +112,13 @@ public class VM {
 	/**
 	 * @return the requestedMemory
 	 */
-	public long getRequestedMemory() {
+	public  double getRequestedMemory() {
 		return requestedMemory;
 	}
 	/**
 	 * @param requestedMemory the requestedMemory to set
 	 */
-	public void setRequestedMemory(long requestedMemory) {
+	public void setRequestedMemory(double requestedMemory) {
 		this.requestedMemory = requestedMemory;
 	}
 	/**
@@ -212,38 +210,26 @@ public class VM {
 	/**
 	 * @return the requestedMips
 	 */
-	public long getRequestedMips() {
+	public  double getRequestedMips() {
 		return requestedMips;
 	}
 	/**
 	 * @param requestedMips the requestedMips to set
 	 */
-	public void setRequestedMips(long requestedMips) {
+	public void setRequestedMips(double requestedMips) {
 		this.requestedMips = requestedMips;
 	}
 	/**
 	 * @return the allocatedMips
 	 */
-	public long getAllocatedMips() {
+	public  double getAllocatedMips() {
 		return allocatedMips;
 	}
 	/**
 	 * @param allocatedMips the allocatedMips to set
 	 */
-	public void setAllocatedMips(long allocatedMips) {
+	public void setAllocatedMips(double allocatedMips) {
 		this.allocatedMips = allocatedMips;
-	}
-	/**
-	 * @return the finishedTaskList
-	 */
-	public List<Task> getFinishedTaskList() {
-		return finishedTaskList;
-	}
-	/**
-	 * @param finishedTaskList the finishedTaskList to set
-	 */
-	public void setFinishedTaskList(List<Task> finishedTaskList) {
-		this.finishedTaskList = finishedTaskList;
 	}
 	public double getFinishTime() {
 		return finishTime;

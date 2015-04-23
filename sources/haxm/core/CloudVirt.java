@@ -39,7 +39,7 @@ public class CloudVirt{
 	
 	/**A time variable to represent clock time of the simulation*/
 	private  static double currentTime;
-	
+	public static final int MILLION = 1000000;
 	public static LogFile mainLog;
 	public static LogFile eventsLog;
 	public static LogFile entityLog;

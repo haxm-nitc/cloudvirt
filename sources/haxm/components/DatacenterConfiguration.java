@@ -2,6 +2,8 @@ package haxm.components;
 
 
 
+import haxm.policies.PricingPolicy;
+
 import java.util.List;
 
 public class DatacenterConfiguration {
@@ -13,23 +15,17 @@ public class DatacenterConfiguration {
 	public List<Storage> storageList;
 	
 	public double bandwidth;
+	
+	private PricingPolicy pricingPolicy;
 		
-	public double costPerMemory;
-	
-	public double costPerBW;
-	
-	public double costPerStorage;
 
 	public DatacenterConfiguration(List<Host> hostList,
-			List<Storage> storageList, double bandwidth, double costPerMemory,
-			double costPerBW, double costPerStorage) {
+			List<Storage> storageList, double bandwidth, PricingPolicy pricingPolicy) {
 		super();
 		this.hostList = hostList;
 		this.storageList = storageList;
 		this.bandwidth = bandwidth;
-		this.costPerMemory = costPerMemory;
-		this.costPerBW = costPerBW;
-		this.costPerStorage = costPerStorage;
+		this.setPricingPolicy(pricingPolicy);
 	}
 
 	/**
@@ -89,44 +85,16 @@ public class DatacenterConfiguration {
 	}
 
 	/**
-	 * @return the costPerMemory
+	 * @return the pricingPolicy
 	 */
-	public double getCostPerMemory() {
-		return costPerMemory;
+	public PricingPolicy getPricingPolicy() {
+		return pricingPolicy;
 	}
 
 	/**
-	 * @param costPerMemory the costPerMemory to set
+	 * @param pricingPolicy the pricingPolicy to set
 	 */
-	public void setCostPerMemory(double costPerMemory) {
-		this.costPerMemory = costPerMemory;
-	}
-
-	/**
-	 * @return the costPerBW
-	 */
-	public double getCostPerBW() {
-		return costPerBW;
-	}
-
-	/**
-	 * @param costPerBW the costPerBW to set
-	 */
-	public void setCostPerBW(double costPerBW) {
-		this.costPerBW = costPerBW;
-	}
-
-	/**
-	 * @return the costPerStorage
-	 */
-	public double getCostPerStorage() {
-		return costPerStorage;
-	}
-
-	/**
-	 * @param costPerStorage the costPerStorage to set
-	 */
-	public void setCostPerStorage(double costPerStorage) {
-		this.costPerStorage = costPerStorage;
+	public void setPricingPolicy(PricingPolicy pricingPolicy) {
+		this.pricingPolicy = pricingPolicy;
 	}
 }

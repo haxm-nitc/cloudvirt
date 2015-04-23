@@ -8,10 +8,10 @@ import haxm.components.VM;
 
 public class VMSchedulerPolicySimple extends VMSchedulerPolicy{
 	private int vmno;
-	private HashMap<VM, Long> vmToMipsMap;
+	private HashMap<VM,  Double> vmToMipsMap;
 	
-	public VMSchedulerPolicySimple(long mips){
-		vmToMipsMap = new HashMap<VM, Long>();
+	public VMSchedulerPolicySimple(double mips){
+		vmToMipsMap = new HashMap<VM,  Double>();
 		vmList = new ArrayList<VM>();
 		setAvailableMips(mips);
 		vmno=0;
@@ -25,12 +25,12 @@ public class VMSchedulerPolicySimple extends VMSchedulerPolicy{
     }
 
 	@Override
-	public long getAllocatedMips(VM vm) {
+	public  double getAllocatedMips(VM vm) {
 		return vmToMipsMap.get(vm);
 	}
 
 	@Override
-	public boolean canAllocateMips(VM vm, long mips) {
+	public boolean canAllocateMips(VM vm,  double mips) {
 		if(getAvailableMips() < mips){
 			return false;
 		}else{
@@ -39,7 +39,7 @@ public class VMSchedulerPolicySimple extends VMSchedulerPolicy{
 	}
 
 	@Override
-	public void allocateMips(VM vm, long mips) {
+	public void allocateMips(VM vm,  double mips) {
 		vmToMipsMap.put(vm, mips);
 		setAvailableMips(getAvailableMips() - mips);
 	}

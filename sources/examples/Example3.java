@@ -2,10 +2,9 @@ package examples;
 import java.util.ArrayList;
 import java.util.List;
 
-import haxm.components.CPU;
+
 import haxm.components.CPUTasklet;
 import haxm.components.CloudRegistry;
-import haxm.components.Core;
 import haxm.components.DIOTasklet;
 import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
@@ -15,7 +14,6 @@ import haxm.components.Storage;
 import haxm.components.Task;
 import haxm.components.Tasklet;
 import haxm.components.VM;
-import haxm.components.VMM;
 import haxm.components.VirtUser;
 import haxm.core.CloudVirt;
 import haxm.policies.TaskSchedulerPolicy;
@@ -77,9 +75,9 @@ public class Example3 {
 		
 		Storage storage = null;
 		
-		long mips = 5;
+			double mips = 5;
 		double bw = 100; //mbps
-		long memory = 8000;
+			double memory = 8000;
 		double disklatency=10;
 		
 		Host host = new Host(storage, mips, memory, bw,disklatency);
@@ -89,7 +87,7 @@ public class Example3 {
 		
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
 		
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, 0, 0, 0);
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, null);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		
 		return datacenter;

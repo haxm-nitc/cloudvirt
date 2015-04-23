@@ -1,10 +1,10 @@
 package haxm.components;
 
 public class DIOTasklet extends Tasklet {
-	private long data;
-	private long remainingData;
+	private  double data;
+	private  double remainingData;
 
-	public DIOTasklet(long data){
+	public DIOTasklet(double data){
 		this.setTaskletType(DISKIO);
 		this.setData(data);
 		this.setRemainingData(data);
@@ -13,7 +13,7 @@ public class DIOTasklet extends Tasklet {
 
 
 
-	public long getRemainingData() {
+	public  double getRemainingData() {
 		// TODO Auto-generated method stub
 		return remainingData;
 	}
@@ -23,7 +23,7 @@ public class DIOTasklet extends Tasklet {
 	/**
 	 * @return the data
 	 */
-	public long getData() {
+	public  double getData() {
 		return data;
 	}
 
@@ -32,7 +32,7 @@ public class DIOTasklet extends Tasklet {
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(long data) {
+	public void setData(double data) {
 		this.data = data;
 	}
 
@@ -41,14 +41,14 @@ public class DIOTasklet extends Tasklet {
 	/**
 	 * @param remainingData the remainingData to set
 	 */
-	public void setRemainingData(long remainingData) {
+	public void setRemainingData(double remainingData) {
 		this.remainingData = remainingData;
 	}
 
 
 
 	@Override
-	public double calculateRemainingTime(long mips, long memory, double bw,
+	public double calculateRemainingTime(double mips,  double memory, double bw,
 			double diskLatency) {
 		// TODO Auto-generated method stub
 		return getRemainingData()/diskLatency;

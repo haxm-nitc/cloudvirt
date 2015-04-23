@@ -22,13 +22,13 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 	
  
 	@Override
-	public double runTasks(long mips, long memory, double bw, double diskLatency) {
+	public double runTasks(double mips,  double memory, double bw, double diskLatency) {
 		// TODO Auto-generated method stub
-		
+		//System.out.println(mips);
 		List<Task> runTaskList = getRunningTaskList();
 		double minTime = Double.MAX_VALUE;
 		int numTasks = runTaskList.size();
-		//System.out.println(numTasks);
+		//System.out.println(numTasks+"      "+mips);
 		if(numTasks == 0){
 			return minTime;
 		}
@@ -51,40 +51,4 @@ public class TaskSchedulerPolicySimple extends TaskSchedulerPolicy{
 		setPreviousProcessedTime(currentTime);
 		return minTime;
 	}		
-/*
-		
-		List<Task> removeList = new ArrayList<Task>();
-		int numTasks = taskList.size();
-		double minTime = Double.MAX_VALUE;
-		for(Task task : taskList){
-			task.updateExecution(currentTime - getPreviousProcessedTime(), mips/numTasks, memory/numTasks, bw/numTasks, diskLatency/numTasks);
-			double remainingTime = task.getRemainingTime();
-			CloudVirt.tasksLog.append("[TSPolicy runTasks]task user id:"+task.getUserId()+" and datacenter id :"
-					+task.getDatacenterId()+" remaining time:"+remainingTime);
-			if(remainingTime == 0){
-				removeList.add(task);
-				//minTime = Double.MAX_VALUE;
-				
-			}else{
-				if(minTime>remainingTime)
-					minTime = remainingTime;
-			}	
-		}
-		for(Task task : removeList){
-			VM vm = task.getVm();
-			vm.getFinishedTaskList().add(task);
-		}
-		runningTaskList.removeAll(removeList);
-		
-		if(getRunningTaskList().size() == 0){
-			//every task of vm is over
-			getVm().getVmState().setState(VirtStateEnum.FINISHED);
-			getVm().setFinishTime(currentTime);
-			return Double.MAX_VALUE; //doesn't matter
-			
-		}
-		setPreviousProcessedTime(currentTime);
-		return minTime;
-	}
-*/	
 }

@@ -1,13 +1,13 @@
 package haxm.components;
 
 public class NIOTasklet extends Tasklet{
-	private long data;
-	private long remainingData;
+	private  double data;
+	private  double remainingData;
 	/**
 	 * @param data
 	 * @param remainingData
 	 */
-	public NIOTasklet(long data) {
+	public NIOTasklet(double data) {
 		super();
 		this.data = data;
 		this.remainingData = data;
@@ -16,29 +16,29 @@ public class NIOTasklet extends Tasklet{
 	/**
 	 * @return the data
 	 */
-	public long getData() {
+	public  double getData() {
 		return data;
 	}
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(long data) {
+	public void setData(double data) {
 		this.data = data;
 	}
 	/**
 	 * @return the remainingData
 	 */
-	public long getRemainingData() {
+	public  double getRemainingData() {
 		return remainingData;
 	}
 	/**
 	 * @param remainingData the remainingData to set
 	 */
-	public void setRemainingData(long remainingData) {
+	public void setRemainingData(double remainingData) {
 		this.remainingData = remainingData;
 	}
 	@Override
-	public double calculateRemainingTime(long mips, long memory, double bw,
+	public double calculateRemainingTime(double mips,  double memory, double bw,
 			double diskLatency) {
 		// TODO Auto-generated method stub
 		return getRemainingData()/bw;
