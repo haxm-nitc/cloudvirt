@@ -25,7 +25,7 @@ public class PricingPolicySimple extends PricingPolicy{
 		for(Task task : taskList){
 			cost += costOfTask(task);
 		}
-		System.out.println("vm cost:"+cost);
+		
 		return cost;
 	}
 
@@ -50,7 +50,7 @@ public class PricingPolicySimple extends PricingPolicy{
 					break;
 			}
 		}
-		System.out.println("Task cost:"+cost);
+		
 		return cost;
 	}
 

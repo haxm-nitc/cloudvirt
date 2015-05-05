@@ -1,4 +1,11 @@
 package examples;
+
+/*
+ * In this example we simulate 2 VMs in 2 Hosts. Each VM has a Task.
+ * VM is in a Host inside a Datacenter.
+ * 
+ * */
+
 import java.util.ArrayList;
 import java.util.List;
 

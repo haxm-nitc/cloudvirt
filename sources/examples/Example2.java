@@ -1,4 +1,15 @@
 package examples;
+
+/*
+ * In this example we simulate 2 VMs with 2 Tasks each(each Task has 2 Tasklets).
+ * Those 2 VMs belong to same Host.
+ * 
+ * */
+
+
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
