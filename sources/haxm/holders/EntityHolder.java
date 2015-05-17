@@ -11,18 +11,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This is the class that holds the datacenters,users and the cloudregistry object.
+ *
+ */
 public class EntityHolder {
+	/**
+	 *  	registry object
+	 */
 	CloudRegistry registry;
+	/**
+	 *      list of all datacenters
+	 */
 	List<Datacenter> datacenterList;
+	/**
+	 *      list of all users
+	 */
 	List<VirtUser> userList;
+	/**
+	 *      map entity id to itself
+	 */
 	HashMap<Integer, VirtEntity> entityMap;
 	
+	/**
+	 *  constructor
+	 */
 	public EntityHolder(){
 		datacenterList = new ArrayList<Datacenter>();
 		userList = new ArrayList<VirtUser>();
 		entityMap = new HashMap<Integer, VirtEntity>();
 	}
 	
+	/**
+	 * @param entity the entity to be added to the holder
+	 */
 	public void addEntity(VirtEntity entity){
 		if(entity instanceof Datacenter){
 			datacenterList.add((Datacenter) entity);
@@ -37,14 +59,25 @@ public class EntityHolder {
 		entityMap.put(entity.getId(), entity);
 	}
 	
+	/**
+	 * @param id is the id of the virtentity object we want to get
+	 * @return the entity for which the id matches
+	 */
 	public VirtEntity getEntityByID(int id){
 		return entityMap.get(id);
 	}
 
+	/**
+	 * @param id id of the entity
+	 * @return name of the name of the entity object
+	 */
 	public String getEntityNameByID(int id){
 		return entityMap.get(id).getName();
 	}
 
+	/**
+	 * to start all the entities in the holder class  
+	 */
 	public void startEntities() {
 		registry.startEntity();
 		for(Datacenter datacenter : getDatacenterList() ){
@@ -59,6 +92,9 @@ public class EntityHolder {
 		}
 */			
 	}
+	/**
+	 *  calls the run method of all entity objects in the holder
+	 */
 	public void runAll() {
 		registry.run();
 		for(Datacenter datacenter : getDatacenterList() ){
@@ -70,6 +106,9 @@ public class EntityHolder {
 
 	}
 
+	/**
+	 * shuts down all the entities in the holder class
+	 */
 	public void shutdownEntities() {
 		for(VirtUser user : getUserList()){
 			user.shutdownEntity();
