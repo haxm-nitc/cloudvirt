@@ -1,11 +1,22 @@
 package haxm.components;
 
+/**
+ * this class  models the Network I/O task module
+ *
+ */
 public class NIOTasklet extends Tasklet{
+	/**
+	 * data to be transferred over network
+	 */
 	private  double data;
+	/**
+	 * remaining data to be transferred.
+	 */
 	private  double remainingData;
 	/**
 	 * @param data
 	 * @param remainingData
+	 * constructor.
 	 */
 	public NIOTasklet(double data) {
 		super();
