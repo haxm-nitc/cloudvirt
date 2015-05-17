@@ -8,23 +8,75 @@ import haxm.VirtStateEnum;
 import haxm.core.CloudVirt;
 import haxm.policies.TaskSchedulerPolicy;
 
+/**
+ * this class models the VM object.
+ *
+ */
 public class VM {
+	/**
+	 *  total number of VM's.
+	 */
 	private static int numVms = 0; 
+	/**
+	 *  id of VM
+	 */
 	private int id;
+	/**
+	 *  id of datacenter of host which contains the vm.
+	 */
 	private int datacenterId;
+	/**
+	 *  id of user who created vm.
+	 */
 	private int userId;
+	/**
+	 *  host object that contains the vm.
+	 */
 	private Host host;
+	/**
+	 *  list of tasks.
+	 */
 	private List<Task> taskList;
+	/**
+	 *  requested mips by vm.
+	 */
 	private  double requestedMips;
+	/**
+	 *  allocated mips for vm.
+	 */ 
 	private  double allocatedMips;
+	/**
+	 * requested memory by vm.
+	 */
 	private  double requestedMemory;
+	/**
+	 *  requested bw by vm.
+	 */
 	private double requestedBW;
+	/**
+	 * allocated bw to vm.
+	 */
 	private double allocatedBW;
+	/**
+	 *  allocated memory to vm.
+	 */
 	private double allocatedMemory;
+	/**
+	 * policy for task scheduling.
+	 */
 	private TaskSchedulerPolicy taskSchedulerPolicy;
+	/**
+	 *  next event time.
+	 */
 	private double nextEventTime;
+	/**
+	 *  finish time of VM.
+	 */
 	private double finishTime;
 	
+	/**
+	 *  current state of vm.
+	 */
 	private VirtState vmState;
 	/**
 	 * @param requestedCores
@@ -32,6 +84,7 @@ public class VM {
 	 * @param requestedMemory
 	 * @param requestedBW
 	 * @param taskSchedulerPolicy
+	 * constructor
 	 */
 	public VM(double requestedMips,
 				double requestedMemory, double requestedBW,
@@ -46,6 +99,13 @@ public class VM {
 		taskList = new ArrayList<Task>();
 		vmState = new VirtState(VirtStateEnum.INVALID);
 	}
+	/**
+	 * @param mips mips of vm
+	 * @param memory memory of vm
+	 * @param bw bw of vm
+	 * @param diskLatency disklatency 
+	 * execute tasks inside vm.
+	 */
 	public void executeTasks(double mips,  double memory, double bw, double diskLatency) {
 		if(vmState.getState() != VirtStateEnum.RUNNING){
 			vmState.setState(VirtStateEnum.RUNNING);
@@ -54,6 +114,9 @@ public class VM {
 		CloudVirt.vmsLog.append("[exT mips:"+mips+" memory:"+memory+" bw:"+bw+" disklatency:"+diskLatency+" vmid:"+getId());
 		setNextEventTime(getTaskSchedulerPolicy().runTasks(mips, memory, bw, diskLatency));		
 	}
+	/**
+	 * @param task task to be added
+	 */
 	public void addTask(Task task) {
 		
 		this.getTaskList().add(task);
@@ -231,9 +294,15 @@ public class VM {
 	public void setAllocatedMips(double allocatedMips) {
 		this.allocatedMips = allocatedMips;
 	}
+	/**
+	 * @return finish time
+	 */
 	public double getFinishTime() {
 		return finishTime;
 	}
+	/**
+	 * @param finishTime finishtime to be set.
+	 */
 	public void setFinishTime(double finishTime) {
 		this.finishTime = finishTime;
 	}

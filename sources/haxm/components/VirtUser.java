@@ -11,17 +11,53 @@ import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 import haxm.policies.VirtUserPolicy;
 
+/**
+ * this class models a user in the simulation.
+ *
+ */
 public class VirtUser extends VirtEntity{
+	/**
+	 * list of Vm's needed by user.
+	 */
 	private List<VM> vmList;
+	/**
+	 * list of vm's created.
+	 */
 	private List<VM> createdVMList;
+	/**
+	 * list of failed vm's.
+	 */
 	private List<VM> failedVMList;
+	/**
+	 * list fo tasks.
+	 */
 	private List<Task> taskList;
+	/**
+	 *  list of available datacenter id's.
+	 */
 	private List<Integer> availableDatacenterIdList;
+	/**
+	 *  id's of datacenters selected using policy.
+	 */
 	private List<Integer> selectedDatacenterIdList;
+	/**
+	 *  list of datacenter configurations.
+	 */
 	private List<DatacenterConfiguration> availableConfigurationsList;
+	/**
+	 * policy for selecting datacenter
+	 */
 	private VirtUserPolicy userPolicy;
+	/**
+	 *  map vm id's to number of tasks.
+	 */
 	private HashMap<Integer, Integer> vmToNumTasks;
 	
+	/**
+	 * @param name
+	 * @param policy
+	 * constructor.
+	 */
 	public VirtUser(String name, VirtUserPolicy policy){
 		super(name);
 		this.vmList = new ArrayList<VM>();
@@ -82,6 +118,10 @@ public class VirtUser extends VirtEntity{
 		return false;
 	}
 
+	/**
+	 * @param event contains task data
+	 * handle task finished event.
+	 */
 	private void handle_TASK_FINISHED(VirtEvent event) {
 		// TODO Auto-generated method stub
 		Task task = (Task) event.getData();
@@ -99,6 +139,10 @@ public class VirtUser extends VirtEntity{
 		
 	}
 
+	/**
+	 * @param event 
+	 * handles ack for create_vm.
+	 */
 	private void handle_ACK_CREATE_VM(VirtEvent event) {
 		boolean result = (boolean) event.getData();
 		VM vm = getVmList().get(0);
@@ -122,14 +166,24 @@ public class VirtUser extends VirtEntity{
 		createNextVm();		
 	}
 
+	/**
+	 * @return createdvm list.
+	 */
 	public List<VM> getCreatedVMList() {
 		return createdVMList;
 	}
 
+	/**
+	 * @param createdVMList to set created vm list.
+	 */
 	public void setCreatedVMList(List<VM> createdVMList) {
 		this.createdVMList = createdVMList;
 	}
 
+	/**
+	 * @param event 
+	 * handles datacenter configuration response.
+	 */
 	private void handle_DATACENTER_CONFIGURATION_RESPONSE(VirtEvent event) {
 		// TODO Auto-generated method stub
 		availableConfigurationsList.add((DatacenterConfiguration) event.getData());
@@ -140,6 +194,9 @@ public class VirtUser extends VirtEntity{
 		
 	}
 
+	/**
+	 *  create next vm
+	 */
 	private void createNextVm() {
 		if(getVmList().size() != 0){
 			VM vm = getVmList().get(0);
@@ -150,6 +207,10 @@ public class VirtUser extends VirtEntity{
 		}
 	}
 
+	/**
+	 * @param event contains availabel datacenter id list.
+	 * handle datacenter info response.
+	 */
 	private void handle_DATACENTERS_INFO_RESPONSE(VirtEvent event) {
 		availableDatacenterIdList = (List<Integer>) event.getData();
 		//TO-DO send events to all dc
@@ -158,25 +219,43 @@ public class VirtUser extends VirtEntity{
 		}
 	}
 
+	/**
+	 * @return vm list.
+	 */
 	public List<VM> getVmList() {
 		return vmList;
 	}
 
+	/**
+	 * @param vmList to set vm list.
+	 */
 	public void setVmList(List<VM> vmList) {
 		this.vmList = vmList;
 	}
+	/**
+	 * @return tasklist.
+	 */
 	public List<Task> getTaskList() {
 		return taskList;
 	}
 
+	/**
+	 * @param taskList to set tasklist.
+	 */
 	public void setTaskList(List<Task> taskList) {
 		this.taskList = taskList;
 	}
 
+	/**
+	 * @param vmList vm's to be submitted
+	 */
 	public void submitVMs(List<VM> vmList) {
 		this.getVmList().addAll(vmList);
 	}
 
+	/**
+	 * @param taskList list of tasks to be sumbmitted.
+	 */
 	public void submitTasks(List<Task> taskList) {
 		for(Task task : taskList){
 			VM vm = task.getVm();
