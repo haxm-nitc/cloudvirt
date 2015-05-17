@@ -1,6 +1,6 @@
 package haxm.core;
 /**
- * enum class for the event tags.
+ * enum for the event tags.
  *
  */
 public enum TagEnum{
