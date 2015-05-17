@@ -10,9 +10,20 @@ import haxm.core.VirtEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the cloudregistry class where datacenters can be registered.
+ *
+ */
+/**
+ * @author Xavier Jose
+ *
+ */
 public class CloudRegistry extends VirtEntity{
 	
 	//private List<Datacenter> datacenterList;
+	/**
+	 *  list of datacenter id's
+	 */
 	private List<Integer> datacenterIdList;
 	
 	/**
@@ -29,23 +40,38 @@ public class CloudRegistry extends VirtEntity{
 		this.datacenterIdList = datacenterIdList;
 	}
 
+	/**
+	 * @param name name of the registry
+	 */
 	public CloudRegistry(String name) {
 		super(name);
 		datacenterIdList = new ArrayList<Integer>();
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see haxm.core.VirtEntity#startEntity()
+	 */
 	public boolean startEntity(){
 		this.currentState.setState(VirtStateEnum.RUNNING);
 		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " started at " + CloudVirt.getCurrentTime());
 		return true;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see haxm.core.VirtEntity#shutdownEntity()
+	 */
 	public boolean shutdownEntity(){
 		this.currentState.setState(VirtStateEnum.FINISHED);
 		CloudVirt.writeLog(CloudVirt.entityLog, name +" ID:"+this.getId()+ " finished at " + CloudVirt.getCurrentTime());
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see haxm.core.VirtEntity#processEvent(haxm.core.VirtEvent)
+	 */
 	public boolean processEvent(VirtEvent event){
 /*		
 		String message = "[CR PE] EventID:"+event.getId()
@@ -70,11 +96,17 @@ public class CloudRegistry extends VirtEntity{
 		return true;
 	}
 
+	/**
+	 * @param event contains target destination to send the datacenter_info_response
+	 */
 	private void handle_DATACENTERS_INFO_REQUEST(VirtEvent event) {
 		scheduleNow(event.getSourceId(), TagEnum.DATACENTERS_INFO_RESPONSE, datacenterIdList);
 		
 	}
 
+	/**
+	 * @param event EVENT object containing the datacenter id to be registered.
+	 */
 	private void handle_REGISTER_DATACENTER(VirtEvent event) {
 		datacenterIdList.add((Integer) event.getData());
 	}
