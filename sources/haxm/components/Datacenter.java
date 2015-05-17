@@ -11,15 +11,37 @@ import haxm.core.VirtEntity;
 import haxm.core.VirtEvent;
 import haxm.policies.VMProvisioningPolicy;
 
+/**
+ * This class models the Datacenter object
+ *
+ */
 public class Datacenter extends VirtEntity{
 	
+	/**
+	 *  to know if Datacenter object is executing or not.
+	 */
 	private boolean executing = false;
+	/**
+	 *  configuration of the datacenter.
+	 */
 	private DatacenterConfiguration datacenterConfiguration;
 	
+	/**
+	 *  policy for vmprovisioning.
+	 */
 	private VMProvisioningPolicy vmProvisioningPolicy;
 	
+	/**
+	 * list of Vm's.
+	 */
 	private List<VM> vmList;
+	/**
+	 *  list of finished Vm's.
+	 */
 	private List<VM> finishedVmList;
+	/**
+	 *  list of destroyed Vm's.
+	 */
 	private List<VM> destroyedVmList;
 	
 	/**
@@ -36,8 +58,17 @@ public class Datacenter extends VirtEntity{
 		this.vmList = vmList;
 	}
 
+	/**
+	 *  maps Vm id to the Vm object.
+	 */
 	private HashMap<Integer, VM> vmIdToVmMap;
 	
+	/**
+	 * @param name
+	 * @param datacenterConfiguration
+	 * @param vmProvisioningPolicy
+	 * constructor for initializing variables.
+	 */
 	public Datacenter(String name, DatacenterConfiguration datacenterConfiguration, VMProvisioningPolicy vmProvisioningPolicy) {
 		super(name);
 		this.datacenterConfiguration = datacenterConfiguration;		
@@ -106,6 +137,10 @@ public class Datacenter extends VirtEntity{
 		return false;
 	}
 
+	/**
+	 * @param event containing VM object to be destroyed
+	 * destroys the VM specified by the event object.
+	 */
 	private void handle_VM_DESTROY(VirtEvent event) {
 		// TODO Auto-generated method stub
 		VM vm = (VM) event.getData();
@@ -117,6 +152,10 @@ public class Datacenter extends VirtEntity{
 		//CloudVirt.vmsLog.append("[DC HVD] cost:"+getDatacenterConfiguration().getPricingPolicy().costOfVM(vm));
 	}
 
+	/**
+	 * @param event 
+	 * handles task execution.
+	 */
 	private void handle_TASK_EXECUTION(VirtEvent event) {
 		List<Host> hostList = getDatacenterConfiguration().getHostList();
 		double minTime = Double.MAX_VALUE;
@@ -139,6 +178,10 @@ public class Datacenter extends VirtEntity{
 		}
 	}
 
+	/**
+	 * @param event contains the task to be submitted.
+	 * submits the task for execution.
+	 */
 	private void handle_SUBMIT_TASK(VirtEvent event) {	
 		Task task = (Task) event.getData();
 /*		
@@ -167,6 +210,10 @@ public class Datacenter extends VirtEntity{
 		}
 	}
 
+	/**
+	 * @param event contains the VM object to be created
+	 * handles creation of VM and sends back ACK.
+	 */
 	private void handle_CREATE_VM_WITH_ACK(VirtEvent event) {
 		VM vm = (VM) event.getData();
 		boolean result = false;
@@ -200,31 +247,57 @@ public class Datacenter extends VirtEntity{
 		this.vmProvisioningPolicy = vmProvisioningPolicy;
 	}
 
+	/**
+	 * @return the datacenter configuration.
+	 */
 	public DatacenterConfiguration getDatacenterConfiguration() {
 		return datacenterConfiguration;
 	}
 	
+	/**
+	 * @param datacenterConfiguration 
+	 * setter
+	 */
 	public void setDatacenterConfiguration(DatacenterConfiguration datacenterConfiguration) {
 		this.datacenterConfiguration = datacenterConfiguration;
 		this.datacenterConfiguration.setDatacenterId(getId());
 	}
 
+	/**
+	 * @return finished Vm list.
+	 */
 	public List<VM> getFinishedVmList() {
 		return finishedVmList;
 	}
 
+	/**
+	 * @param finishedVmList 
+	 * setter for finishedVMlist.
+	 */
 	public void setFinishedVmList(List<VM> finishedVmList) {
 		this.finishedVmList = finishedVmList;
 	}
 
+	/**
+	 * @return destroyed VM list.
+	 */
 	public List<VM> getDestroyedVmList() {
 		return destroyedVmList;
 	}
 
+	/**
+	 * @param destroyedVmList 
+	 * setter for destroyedVMlist.
+	 */
 	public void setDestroyedVmList(List<VM> destroyedVmList) {
 		this.destroyedVmList = destroyedVmList;
 	}
 
+	/**
+	 * @param task task that is completed.
+	 * @param userId userid to send notification.
+	 * sends an event to a user to notify that task is completed.
+	 */
 	public void notifyTaskFinished(Task task, int userId) {
 		// TODO Auto-generated method stub
 		scheduleNow(userId, TagEnum.TASK_FINISHED, task);
