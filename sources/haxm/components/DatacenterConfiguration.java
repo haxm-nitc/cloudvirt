@@ -6,19 +6,41 @@ import haxm.policies.PricingPolicy;
 
 import java.util.List;
 
+/**
+ * This class models the Datacenter configuration.
+ *
+ */
 public class DatacenterConfiguration {
 	
+	/**
+	 *  id of datacenter.
+	 */
 	private int datacenterId;
 
+	/**
+	 *  list of hosts in the datacenter.
+	 */
 	public List<Host> hostList;
 	
 
 	
+	/**
+	 * total bandwidth of datacenter.
+	 */
 	public double bandwidth;
 	
+	/**
+	 * policy for charging users for usage.
+	 */
 	private PricingPolicy pricingPolicy;
 		
 
+	/**
+	 * @param hostList 
+	 * @param bandwidth
+	 * @param pricingPolicy
+	 * constructor to set variables.
+	 */
 	public DatacenterConfiguration(List<Host> hostList, double bandwidth, PricingPolicy pricingPolicy) {
 		super();
 		this.hostList = hostList;
