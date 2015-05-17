@@ -3,6 +3,10 @@ package haxm.policies;
 import haxm.components.Task;
 import haxm.components.VM;
 
+/**
+ * this class models the pricing policy
+ *
+ */
 public abstract class PricingPolicy {
 
 	/**
@@ -10,6 +14,7 @@ public abstract class PricingPolicy {
 	 * @param costPerNio
 	 * @param costPerMemory
 	 * @param costPerDio
+	 * constructor
 	 */
 	public PricingPolicy(double costPerInstruction, double costPerDio, double costPerNio, double costPerMemory) {
 		super();
@@ -18,12 +23,32 @@ public abstract class PricingPolicy {
 		this.costPerMemory = costPerMemory;
 		this.costPerDio = costPerDio;
 	}
+	/**
+	 * cost per instruction
+	 */
 	private double costPerInstruction;
+	/**
+	 *  cost per network i/o 
+	 */
 	private double costPerNio;
+	/**
+	 *  cost per memory
+	 */
 	private double costPerMemory;
+	/**
+	 *  cost per dio.
+	 */
 	private double costPerDio;
 	
+	/**
+	 * @param vm vm specified
+	 * @return cost of vm
+	 */
 	public abstract double costOfVM(VM vm);
+	/**
+	 * @param task task to be evaluated
+	 * @return cost of task
+	 */
 	public abstract double costOfTask(Task task);
 	
 	/**

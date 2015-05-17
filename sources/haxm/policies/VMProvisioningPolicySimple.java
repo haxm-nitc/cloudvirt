@@ -5,6 +5,10 @@ import haxm.components.Host;
 import haxm.components.VM;
 import haxm.core.CloudVirt;
 
+/**
+ * simple implementation of vm provisioning policy
+ *
+ */
 public class VMProvisioningPolicySimple extends VMProvisioningPolicy{
 
 	@Override

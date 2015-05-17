@@ -6,17 +6,45 @@ import haxm.components.VM;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class models the task scheduler policy
+ *
+ */
 public abstract class TaskSchedulerPolicy {
+	/**
+	 * list of tasks.
+	 */
 	private List<Task> taskList;
+	/**
+	 * list of running tasks.
+	 */
 	protected List<Task> runningTaskList;
 //	protected List<Task> finishedTaskList;
+	/**
+	 * list of failed tasks
+	 */
 	private List<Task> failedTaskList;
+	/**
+	 * allocated bw
+	 */
 	private double allocatedBW;
+	/**
+	 * allocated memory
+	 */
 	private double allocatedMemory;
+	/**
+	 * vm for applying the policy
+	 */
 	protected VM vm;
+	/**
+	 *  previous processed time
+	 */
 	private double previousProcessedTime;
 
 	
+	/**
+	 *  constructor
+	 */
 	public TaskSchedulerPolicy(){
 		taskList = new ArrayList<Task>();
 		runningTaskList = new ArrayList<Task>();
@@ -24,9 +52,15 @@ public abstract class TaskSchedulerPolicy {
 		failedTaskList = new ArrayList<Task>();
 		previousProcessedTime = Double.MAX_VALUE;
 	}
+	/**
+	 * @return vm
+	 */
 	public VM getVm() {
 		return vm;
 	}
+	/**
+	 * @param vm vm to be set
+	 */
 	public void setVm(VM vm) {
 		this.vm = vm;
 	}
@@ -110,8 +144,19 @@ public abstract class TaskSchedulerPolicy {
 	public void setPreviousProcessedTime(double previousProcessedTime) {
 		this.previousProcessedTime = previousProcessedTime;
 	}
+	/**
+	 * @param mips
+	 * @param memory
+	 * @param bw
+	 * @param diskLatency
+	 * @return time after completion
+	 * runs the tasks
+	 */
 	public abstract double runTasks(double mips,  double memory, double bw, double diskLatency);
 
+	/**
+	 * @param task task to be added
+	 */
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub
 		getTaskList().add(task);

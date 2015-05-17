@@ -4,9 +4,20 @@ import java.util.HashMap;
 import haxm.components.VM;
 import haxm.policies.BWProvisioningPolicy;
 
+/**
+ * simple implementation of bw provisioning policy
+ *
+ */
 public class BWProvisioningPolicySimple extends BWProvisioningPolicy{
+	/**
+	 *  maps vm to its bw.
+	 */
 	HashMap<Integer, Double> vmToBWMap;
 	
+	/** 
+	 * @param bw bandwidth
+	 * constructor
+	 */
 	public BWProvisioningPolicySimple(double bw){
 		setAvailableBw(bw);
 		vmToBWMap = new HashMap<Integer, Double>();

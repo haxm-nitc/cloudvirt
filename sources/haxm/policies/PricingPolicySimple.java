@@ -10,8 +10,19 @@ import haxm.components.Tasklet;
 import haxm.components.VM;
 import haxm.core.CloudVirt;
 
+/**
+ * simple implementation of pricing policy
+ *
+ */
 public class PricingPolicySimple extends PricingPolicy{
 
+	/**
+	 * @param costPerInstruction
+	 * @param costPerDio
+	 * @param costPerNio
+	 * @param costPerMemory
+	 * constructor.
+	 */
 	public PricingPolicySimple(double costPerInstruction, double costPerDio, double costPerNio, double costPerMemory) {
 		super(costPerInstruction, costPerNio, costPerMemory, costPerDio);
 		// TODO Auto-generated constructor stub

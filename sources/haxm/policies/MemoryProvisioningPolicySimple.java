@@ -4,10 +4,21 @@ import java.util.HashMap;
 import haxm.components.VM;
 import haxm.policies.MemoryProvisioningPolicy;
 
+/**
+ * simple implementation of memory provisioning policy
+ *
+ */
 public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy{
 
+	/**
+	 *   maps vmid to memory
+	 */
 	private HashMap<Integer,  Double> vmToMemoryMap;
-     public MemoryProvisioningPolicySimple(double Memory){
+     /**
+     * @param Memory
+     * constructor
+     */
+    public MemoryProvisioningPolicySimple(double Memory){
      	setAvailableMemory(Memory);
      	vmToMemoryMap = new HashMap<Integer,  Double>();
      }
