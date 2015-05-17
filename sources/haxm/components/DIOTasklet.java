@@ -1,9 +1,27 @@
 package haxm.components;
 
+/**
+ * this class models the I/O task module.
+ *
+ */
+/**
+ * @author Xavier Jose
+ *
+ */
 public class DIOTasklet extends Tasklet {
+	/**
+	 *  data to be read
+	 */
 	private  double data;
+	/**
+	 *  remaining data to be read.
+	 */
 	private  double remainingData;
 
+	/**
+	 * @param data 
+	 * constructor
+	 */
 	public DIOTasklet(double data){
 		this.setTaskletType(DISKIO);
 		this.setData(data);
@@ -13,6 +31,10 @@ public class DIOTasklet extends Tasklet {
 
 
 
+	/**
+	 * @return remainingdata
+	 * getter
+	 */
 	public  double getRemainingData() {
 		// TODO Auto-generated method stub
 		return remainingData;
@@ -22,6 +44,7 @@ public class DIOTasklet extends Tasklet {
 
 	/**
 	 * @return the data
+	 * getter
 	 */
 	public  double getData() {
 		return data;
@@ -31,6 +54,7 @@ public class DIOTasklet extends Tasklet {
 
 	/**
 	 * @param data the data to set
+	 * setter
 	 */
 	public void setData(double data) {
 		this.data = data;
