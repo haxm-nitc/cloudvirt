@@ -9,8 +9,6 @@ package examples;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 import haxm.components.CPUTasklet;
 import haxm.components.CloudRegistry;
 import haxm.components.DIOTasklet;
@@ -18,7 +16,6 @@ import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
 import haxm.components.Host;
 import haxm.components.NIOTasklet;
-import haxm.components.Storage;
 import haxm.components.Task;
 import haxm.components.Tasklet;
 import haxm.components.VM;
@@ -80,22 +77,19 @@ public class Example3 {
 	}
 
 	private static Datacenter createDatacenter(String string) {
-		
-		Storage storage = null;
-		
-			double mips = 5;
+		double mips = 5;
 		double bw = 100; //mbps
 			double memory = 8000;
 		double disklatency=10;
 		
-		Host host = new Host(storage, mips, memory, bw,disklatency);
+		Host host = new Host(mips, memory, bw,disklatency);
 		
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);
 		
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
 		
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, null);
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, 0, null);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		
 		return datacenter;

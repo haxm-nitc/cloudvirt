@@ -12,18 +12,16 @@ public class DatacenterConfiguration {
 
 	public List<Host> hostList;
 	
-	public List<Storage> storageList;
+
 	
 	public double bandwidth;
 	
 	private PricingPolicy pricingPolicy;
 		
 
-	public DatacenterConfiguration(List<Host> hostList,
-			List<Storage> storageList, double bandwidth, PricingPolicy pricingPolicy) {
+	public DatacenterConfiguration(List<Host> hostList, double bandwidth, PricingPolicy pricingPolicy) {
 		super();
 		this.hostList = hostList;
-		this.storageList = storageList;
 		this.bandwidth = bandwidth;
 		this.setPricingPolicy(pricingPolicy);
 	}
@@ -54,20 +52,6 @@ public class DatacenterConfiguration {
 	 */
 	public void setHostList(List<Host> hostList) {
 		this.hostList = hostList;
-	}
-
-	/**
-	 * @return the storageList
-	 */
-	public List<Storage> getStorageList() {
-		return storageList;
-	}
-
-	/**
-	 * @param storageList the storageList to set
-	 */
-	public void setStorageList(List<Storage> storageList) {
-		this.storageList = storageList;
 	}
 
 	/**

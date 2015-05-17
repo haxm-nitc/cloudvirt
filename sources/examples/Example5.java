@@ -10,7 +10,6 @@ import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
 import haxm.components.Host;
 import haxm.components.NIOTasklet;
-import haxm.components.Storage;
 import haxm.components.Task;
 import haxm.components.Tasklet;
 import haxm.components.VM;
@@ -89,23 +88,20 @@ public class Example5 {
 		return (new Task(taskletList));
 	}
 
-	private static Datacenter createDatacenter(String string) {
-		
-		Storage storage = null;
-		
+	private static Datacenter createDatacenter(String string) {		
 		double mips = 5;
 		double bw = 100; //mbps
 		double memory = 8000;
 		double disklatency=9;
 		
-		Host host = new Host(storage, mips, memory, bw,disklatency);
+		Host host = new Host(mips, memory, bw,disklatency);
 		
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);
 		
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
 		
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, null);
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, 0, null);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		
 		return datacenter;

@@ -29,6 +29,7 @@ public class MemoryProvisioningPolicySimple extends MemoryProvisioningPolicy{
 
 	@Override
 	public void allocateMemory(VM vm,  double memory) {
+//		setAvailableMemory(getAvailableMemory() - memory);
 		vmToMemoryMap.put(vm.getId(), memory);
 		
 	}

@@ -114,7 +114,7 @@ public class Datacenter extends VirtEntity{
 		host.getVmSchedulerPolicy().deallocateMips(vm);
 		host.getMemoryProvisioningPolicy().deallocateMemory(vm);
 		host.getBwProvisioningPolicy().deallocateBW(vm);
-		CloudVirt.vmsLog.append("[DC HVD] cost:"+getDatacenterConfiguration().getPricingPolicy().costOfVM(vm));
+		//CloudVirt.vmsLog.append("[DC HVD] cost:"+getDatacenterConfiguration().getPricingPolicy().costOfVM(vm));
 	}
 
 	private void handle_TASK_EXECUTION(VirtEvent event) {

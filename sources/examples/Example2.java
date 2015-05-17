@@ -19,7 +19,6 @@ import haxm.components.DIOTasklet;
 import haxm.components.Datacenter;
 import haxm.components.DatacenterConfiguration;
 import haxm.components.Host;
-import haxm.components.Storage;
 import haxm.components.Task;
 import haxm.components.Tasklet;
 import haxm.components.VM;
@@ -95,15 +94,12 @@ public class Example2{
 	}
 
 	private static Datacenter createDatacenter(String string) {
-		
-		Storage storage = null;
-		
-			double mips = 20;
+		double mips = 20;
 		double bw = 100; //mbps
 			double memory = 8000;
 		double disklatency=10;
 		
-		Host host = new Host(storage, mips, memory, bw,disklatency);
+		Host host = new Host(mips, memory, bw,disklatency);
 		
 		List<Host> hostList = new ArrayList<Host>();
 		hostList.add(host);
@@ -111,7 +107,7 @@ public class Example2{
 		VMProvisioningPolicySimple vmProvisioner = new VMProvisioningPolicySimple();
 		PricingPolicy pricingPolicy = new PricingPolicySimple(1, 2, 3, 4);
 		
-		DatacenterConfiguration config = new DatacenterConfiguration(hostList, null, 0, pricingPolicy);
+		DatacenterConfiguration config = new DatacenterConfiguration(hostList, 0, pricingPolicy);
 		Datacenter datacenter = new Datacenter(string, config, vmProvisioner);
 		
 		return datacenter;

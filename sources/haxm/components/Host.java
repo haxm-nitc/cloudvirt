@@ -21,7 +21,7 @@ public class Host {
 	private BWProvisioningPolicy bwProvisioningPolicy;
 
 	private List<VM> vmList;
-	private Storage storage;
+
 	private  double memory;
 	private double bandwidth;
 	private  double mips;
@@ -38,11 +38,11 @@ public class Host {
 	 * @param bandwidth
 	 * @param datacenter
 	 */
-	public Host(Storage storage,  double mips,  double memory, double bandwidth,double diskLatency) {
+	public Host(double mips,  double memory, double bandwidth,double diskLatency) {
 		super();
 		this.setId(++numHosts);
 		this.diskLatency = diskLatency;
-		this.storage = storage;
+
 		this.memory = memory;
 		this.bandwidth = bandwidth;
 		this.mips = mips;
@@ -74,19 +74,6 @@ public class Host {
 		}		
 		this.setNextEventTime(minTime);
 		
-	}
-
-	/**
-	 * @return the storage
-	 */
-	public Storage getStorage() {
-		return storage;
-	}
-	/**
-	 * @param storage the storage to set
-	 */
-	public void setStorage(Storage storage) {
-		this.storage = storage;
 	}
 	/**
 	 * @return the memory
