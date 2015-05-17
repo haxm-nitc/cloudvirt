@@ -13,23 +13,66 @@ import haxm.policies.VMSchedulerPolicySimple;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class models the host class
+ *
+ */
 public class Host {
+	/**
+	 * total hosts
+	 */
 	private static int numHosts = 0;
+	/**
+	 * id of host
+	 */
 	private int id;
+	/**
+	 * policy for vm scheduling
+	 */
 	private VMSchedulerPolicy vmSchedulerPolicy;
+	/**
+	 * policy for memory provisioning
+	 */
 	private MemoryProvisioningPolicy memoryProvisioningPolicy;
+	/**
+	 * policy for bw provisioning
+	 */
 	private BWProvisioningPolicy bwProvisioningPolicy;
 
+	/**
+	 * list of vm's/
+	 */ 
 	private List<VM> vmList;
 
+	/**
+	 *  memory in host.
+	 */
 	private  double memory;
+	/**
+	 * bw for host.
+	 */
 	private double bandwidth;
+	/**
+	 * mips of host.
+	 */
 	private  double mips;
 	//5 msec per kb
+	/**
+	 * disk latency of host.
+	 */
 	private double diskLatency;
+	/**
+	 * id of datacenter it belongs to.
+	 */
 	private int datacenterId;
+	/**
+	 *  time of the next event.
+	 */
 	private double nextEventTime;
 	
+	/**
+	 * state of host.
+	 */
 	private VirtState hostState;
 	/**
 	 * @param vmm
@@ -37,6 +80,7 @@ public class Host {
 	 * @param memory
 	 * @param bandwidth
 	 * @param datacenter
+	 * constructor
 	 */
 	public Host(double mips,  double memory, double bandwidth,double diskLatency) {
 		super();
@@ -53,6 +97,9 @@ public class Host {
 		memoryProvisioningPolicy = new MemoryProvisioningPolicySimple(memory);
 	}	
 
+	/**
+	 *  execute all VM's inside the host.
+	 */
 	public void executeVMs() {
 		double minTime = Double.MAX_VALUE;
 		double time;
